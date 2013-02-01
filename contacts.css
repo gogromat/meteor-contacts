@@ -6,9 +6,24 @@
 }
 
 .inline {
-	/*float:   left;*/
+	float:   left;
 	display: block;
 }
+
+.clear-inline {
+    clear: both;
+}
+
+table.contactTable {
+    /*border: 1px solid #C0C0C0;*/
+    border-spacing : 6px !important;
+    border-collapse: separate;
+}
+
+td {
+    vertical-align: top;
+}
+
 
 
 /* HEADER */
@@ -42,6 +57,7 @@
 }
 
 .jumbotron {
+    background: -webkit-linear-gradient(45deg, #020031 0%,#6d3353 100%);
     background: linear-gradient(45deg, #020031 0%, #6D3353 100%) repeat scroll 0 0 transparent;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2) inset, 0 -3px 7px rgba(0, 0, 0, 0.2) inset;
     color: #FFFFFF;

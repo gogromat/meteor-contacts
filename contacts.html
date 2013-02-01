@@ -49,26 +49,34 @@
 <template name="contact_item">
 	<!-- <div class="inline"> -->
 		<!-- <div class="form-horizontal"> -->
-		<table>
+		<table class="contactTable">
 			<tr>
+				
 				<td>
-					<input type="text" name="name[]" value="{{name}}" />
+					<div class="inline form-horizontal">
+						<input type="text" name="name[]" value="{{name}}" />
+						<button class="button btn-small btn-danger remove-contact">X Contact</button>
+					</div>
+					<div class="clear-inline"></div>
 				</td>
+				
 				<td> 
 
 					{{#each address_objs}}
-						<div class="form-horizontal">
+						<div class="inline form-horizontal">
 							<input type="text" value="{{street}}" />
 							<button class="button btn-small btn-danger remove-address">X Address</button>
-						</div><br>
+						</div>
+						<div class="clear-inline"></div>
 					{{/each}}	
 
-					<input type="text" id="{{_id}}_add_address" placeholder="Another Address">
-					<button class="button btn-small btn-success add_another_address">+ Address</button>
+					<div class="inline form-horizontal">
+						<input type="text" id="{{_id}}_add_address" placeholder="Another Address">
+						<button class="button btn-small btn-success add_another_address">+ Address</button>
+					</div>
 				</td>
-				<td>
-					<button class="button btn-small btn-danger remove-contact">X Contact</button>
-				</td>
+
+				<td></td>
 			</tr>
 		</table>
 		<!-- </div> -->
@@ -77,12 +85,10 @@
 
 
 <template name="add_contact">
-	<div id="new_contact">
-		<div class="form-horizontal">
-			<input type="text" id="new_contact_name"    placeholder="Name" />
-			<input type="text" id="new_contact_address" placeholder="Address" />		
-			<button id="add_new_contact" class="btn btn-small btn-success">+ Add</button>
-		</div>
+	<div class="well" id="new_contact">
+		<input type="text" id="new_contact_name"    placeholder="Name" />
+		<input type="text" id="new_contact_address" placeholder="Address" />		
+		<button id="add_new_contact" class="btn btn-small btn-success">+ Add</button>
 	</div>
 </template>
 

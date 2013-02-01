@@ -33,11 +33,17 @@ if (Meteor.isClient) {
 
   Template.contacts_view.events({
       'click #add_new_contact': function() {
-        Contacts.insert(
-          { 
-            name:     document.getElementById('new_contact_name').value,
-            addresses:[{street:document.getElementById('new_contact_address').value}]
-          });
+        var name    = document.getElementById('new_contact_name').value;
+        var address = document.getElementById('new_contact_address').value;
+        if (name === "") {
+          return false;
+        }
+        if (address === "") {
+          Contacts.insert({name:name});
+        }
+        else {
+          Contacts.insert({name:name,addresses:[{street:address}]});
+        }
         document.getElementById('new_contact_name').value = "";
         document.getElementById('new_contact_address').value = "";
       }
@@ -59,8 +65,12 @@ if (Meteor.isClient) {
         Contacts.remove(this._id);
       },
       'click .add_another_address': function() {
+        var address = document.getElementById(this._id+'_add_address').value;
+        if (address === "") {
+          return false;
+        }
         Contacts.update(this._id, 
-          {$push: {addresses: { street: document.getElementById(this._id+'_add_address').value } } });
+          {$push: {addresses: { street: address } } });
         document.getElementById(this._id+'_add_address').value = "";
       },
       'click .remove-address': function(evt) {
