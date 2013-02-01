@@ -25,6 +25,18 @@ td {
 }
 
 
+#RightSidebar {
+
+}
+
+.fixed-200 {
+    width: 200px;
+    max-width: 200px;
+}
+
+.count {
+    text-align: right;
+}
 
 /* HEADER */
 .jumbotron:after {

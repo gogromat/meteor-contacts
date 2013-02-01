@@ -40,8 +40,7 @@ if (Meteor.isClient) {
         }
         if (address === "") {
           Contacts.insert({name:name});
-        }
-        else {
+        } else {
           Contacts.insert({name:name,addresses:[{street:address}]});
         }
         document.getElementById('new_contact_name').value = "";
@@ -56,33 +55,78 @@ if (Meteor.isClient) {
   Template.contact_item.address_objs = function () {
     var contact_id = this._id;
     return _.map(this.addresses || [], function (address) {
-      return {contact_id: contact_id, street: address.street};
+      return {contact_id : contact_id, street : address.street};
     });
   };
+
 
   Template.contact_item.events({
       'click .remove-contact': function() {
         Contacts.remove(this._id);
       },
       'click .add_another_address': function() {
-        var address = document.getElementById(this._id+'_add_address').value;
+        var id = this._id;
+        var address = document.getElementById(this._id + '_add_address').value;
         if (address === "") {
           return false;
         }
-        Contacts.update(this._id, 
-          {$push: {addresses: { street: address } } });
-        document.getElementById(this._id+'_add_address').value = "";
+        Contacts.update(id, { $push : { addresses: { street : address } } });
+        document.getElementById(this._id + '_add_address').value = "";
       },
       'click .remove-address': function(evt) {
-        var street = this.street;
-        var id     = this.contact_id;
+        var id  = this.contact_id,
+            street = this.street;
         Contacts.update(
           {_id:id}, 
-          {$pull: {addresses: {"street":street} } });
+          {$pull: {addresses : {"street" : street} } });
+      },
+      'blur .contact-name': function(evt) {
+        var id  = this._id,
+            old_name = this.name,
+            new_name = evt.target.value;
+        if (old_name !== new_name) {
+          Contacts.update(id,{$set : {name : new_name}});
+        }
+      },
+      'blur .contact-address': function(evt) {
+        var id = this.contact_id,
+            old_street = this.street,
+            new_street = evt.target.value;
+        if (old_street !== new_street) {
+          Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
+          Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
+        }
+
       }
   });
 
 
+
+  Template.address_filter.addresses = function() {
+    var addresses = [];
+    var total_count = 0;
+
+    Contacts.find({}).forEach(function(contact) {
+      _.each(contact.addresses, function(contact_address) {
+        var new_street = _.find(addresses, function (address) { return address.street === contact_address.street;});
+        if (! new_street) {
+          addresses.push({street: contact_address.street, count: 1});
+        } else {
+          new_street.count++;
+        }
+      });
+      total_count++;
+    });
+    //sorts by how many times same address repeats (not best, but ok)
+    addresses = _.sortBy(addresses, function(address) { return address.street; });
+    //also add one empty
+    addresses.unshift({street: null, count: total_count});
+    return addresses;
+  }
+
+  Template.address_filter.streets = function () {
+    return this.street || "All streets";
+  };
 
 
 

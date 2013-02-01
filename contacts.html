@@ -21,10 +21,10 @@
 	<div class="row-fluid">
 
 	
-		<div class="span4" id="LeftSidebar"></div>
+		<div class="span3" id="LeftSidebar"></div>
 		
 
-		<div class="span8" id="mainSpan">
+		<div class="span6" id="mainSpan">
 			{{#each contacts}}
 	  			{{> contact_item}}
 			{{/each}}
@@ -38,12 +38,24 @@
 		</div>
 
 
-		<div class="span4" id="LeftSidebar"></div>
+		<div class="span2" id="RightSidebar">
+    		{{>address_filter}}
+		</div>
+
+		<div class="span1" id="RightSidebar2"></div>
 
 	</div>
 
 </template>
 
+
+<template name="address_filter">
+	Show:
+	{{#each addresses}}
+		<br>
+		<button class="button btn-small btn-info fixed-200">{{streets}} <span class="count">({{count}})</span></button>
+	{{/each}}
+</template>
 
 
 <template name="contact_item">
@@ -54,7 +66,7 @@
 				
 				<td>
 					<div class="inline form-horizontal">
-						<input type="text" name="name[]" value="{{name}}" />
+						<input type="text" value="{{name}}" class="contact-name" />
 						<button class="button btn-small btn-danger remove-contact">X Contact</button>
 					</div>
 					<div class="clear-inline"></div>
@@ -64,7 +76,7 @@
 
 					{{#each address_objs}}
 						<div class="inline form-horizontal">
-							<input type="text" value="{{street}}" />
+							<input type="text" value="{{street}}" class="contact-address" />
 							<button class="button btn-small btn-danger remove-address">X Address</button>
 						</div>
 						<div class="clear-inline"></div>
@@ -94,10 +106,10 @@
 
 
 <template name="debug_contacts">
-	{{name}} -- 
-	{{#each addresses}}
-		{{street}}
-	{{/each}}<br>
+	{{name}} --
+	[{{#each addresses}}
+		{{street}},
+	{{/each}}]<br>
 </template>
 
 <template name="navbar">
