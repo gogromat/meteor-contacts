@@ -13,12 +13,6 @@
 
 	{{>footer}}
 
-<form class="navbar-search">
-    <input type="text" class="search-query" placeholder="Search here" />        
-    <label for="mySubmit" class="btn"><i class="icon-search icon-white"></i> Search me</label>
-    <input id="mySubmit" type="submit" value="Go" class="hidden" />
-</form>
-
 </body>
 
 
@@ -32,7 +26,7 @@
 
 		<div class="span8" id="mainSpan">
 			{{#each contacts}}
-	  			{{> contact_row}}
+	  			{{> contact_item}}
 			{{/each}}
 
 			{{>add_contact}}
@@ -52,7 +46,7 @@
 
 
 
-<template name="contact_row">
+<template name="contact_item">
 	<!-- <div class="inline"> -->
 		<!-- <div class="form-horizontal"> -->
 		<table>
@@ -61,14 +55,19 @@
 					<input type="text" name="name[]" value="{{name}}" />
 				</td>
 				<td> 
-					{{#each addresses}}
-						<input type="text" name="address[]" value="{{street}}" /><br>
+
+					{{#each address_objs}}
+						<div class="form-horizontal">
+							<input type="text" value="{{street}}" />
+							<button class="button btn-small btn-danger remove-address">X Address</button>
+						</div><br>
 					{{/each}}	
+
 					<input type="text" id="{{_id}}_add_address" placeholder="Another Address">
-					<button class="button btn-small btn-success add_another_address">+</button>
+					<button class="button btn-small btn-success add_another_address">+ Address</button>
 				</td>
 				<td>
-					<button class="button btn-small btn-danger remove-contact">X</button>
+					<button class="button btn-small btn-danger remove-contact">X Contact</button>
 				</td>
 			</tr>
 		</table>
@@ -89,7 +88,10 @@
 
 
 <template name="debug_contacts">
-	{{name}} -- {{#each addresses}}{{street}}{{/each}}<br>
+	{{name}} -- 
+	{{#each addresses}}
+		{{street}}
+	{{/each}}<br>
 </template>
 
 <template name="navbar">
