@@ -1,0 +1,98 @@
+<head>
+	<title>My Contacts</title>
+</head>
+
+
+<body>
+
+	<div class="navbar navbar-inverse">
+	    <div class="navbar-inner">
+		    <a class="brand" target="_blank" href="http://github.com/gogromat">GogromaT</a>
+		    <!--<ul class="nav">
+			    <li class="active"><a href="#">Home</a></li>
+			    <li><a href="#">Link</a></li>
+			    <li><a href="#">Link</a></li>
+		    </ul>-->
+		</div>
+    </div>
+
+    {{>header}}
+
+	{{> contacts_view}}
+
+	{{>footer}}
+
+</body>
+
+
+<template name="contacts_view">
+	
+	<div class="row-fluid">
+
+	
+		<div class="span4" id="LeftSidebar"></div>
+		
+
+		<div class="span8" id="mainSpan">
+			{{#each contacts}}
+	  			{{> contact_row}}
+			{{/each}}
+
+			<div id="new_contact">
+				<input type="text" id="new_contact_name"    placeholder="Another Contact" />
+				<input type="text" id="new_contact_address" placeholder="Address" />		
+				<button id="add_new_contact" class="btn btn-success btn-small">+ Add</button>
+			</div>
+
+			{{#each contacts}}
+		  		{{> debug_contacts}}
+			{{/each}}
+
+		</div>
+
+
+		<div class="span4" id="LeftSidebar"></div>
+
+	</div>
+
+</template>
+
+
+<template name="contact_row">
+	<div class="inline">
+		<input type="text" name="name[]" value="{{name}}" />
+		lives at 
+		<input type="text" name="address[]" value="{{address}}" />
+	</div>
+</template>	
+
+
+<template name="debug_contacts">
+	{{name}} - {{address}}<br>
+</template>
+
+
+
+
+
+
+
+
+<template name="header">
+	<header class="jumbotron subhead">
+		<div class="container">
+			<h1>Contacts</h1>
+			<p class="lead">Your Contacts anywhere</p>
+		</div>
+	</header>
+</template>
+
+
+<template name="footer">
+	<footer class="footer">
+		<div class="container">
+			<p>Designed by <a target="_blank" href="http://github.com/gogromat">GogromaT</a><p>
+			<p>2013</p>
+		</div>
+	</footer>
+</template>
