@@ -5,22 +5,19 @@
 
 <body>
 
-	<div class="navbar navbar-inverse">
-	    <div class="navbar-inner">
-		    <a class="brand" target="_blank" href="http://github.com/gogromat">GogromaT</a>
-		    <!--<ul class="nav">
-			    <li class="active"><a href="#">Home</a></li>
-			    <li><a href="#">Link</a></li>
-			    <li><a href="#">Link</a></li>
-		    </ul>-->
-		</div>
-    </div>
+	{{>navbar}}
 
     {{>header}}
 
 	{{> contacts_view}}
 
 	{{>footer}}
+
+<form class="navbar-search">
+    <input type="text" class="search-query" placeholder="Search here" />        
+    <label for="mySubmit" class="btn"><i class="icon-search icon-white"></i> Search me</label>
+    <input id="mySubmit" type="submit" value="Go" class="hidden" />
+</form>
 
 </body>
 
@@ -38,11 +35,7 @@
 	  			{{> contact_row}}
 			{{/each}}
 
-			<div id="new_contact">
-				<input type="text" id="new_contact_name"    placeholder="Another Contact" />
-				<input type="text" id="new_contact_address" placeholder="Address" />		
-				<button id="add_new_contact" class="btn btn-success btn-small">+ Add</button>
-			</div>
+			{{>add_contact}}
 
 			{{#each contacts}}
 		  		{{> debug_contacts}}
@@ -58,18 +51,64 @@
 </template>
 
 
+
 <template name="contact_row">
-	<div class="inline">
-		<input type="text" name="name[]" value="{{name}}" />
-		lives at 
-		<input type="text" name="address[]" value="{{address}}" />
-	</div>
+	<!-- <div class="inline"> -->
+		<!-- <div class="form-horizontal"> -->
+		<table>
+			<tr>
+				<td>
+					<input type="text" name="name[]" value="{{name}}" />
+				</td>
+				<td> 
+					{{#each addresses}}
+						<input type="text" name="address[]" value="{{street}}" /><br>
+					{{/each}}	
+					<input type="text" id="{{_id}}_add_address" placeholder="Another Address">
+					<button class="button btn-small btn-success add_another_address">+</button>
+				</td>
+				<td>
+					<button class="button btn-small btn-danger remove-contact">X</button>
+				</td>
+			</tr>
+		</table>
+		<!-- </div> -->
+	<!-- </div> -->
 </template>	
 
 
-<template name="debug_contacts">
-	{{name}} - {{address}}<br>
+<template name="add_contact">
+	<div id="new_contact">
+		<div class="form-horizontal">
+			<input type="text" id="new_contact_name"    placeholder="Name" />
+			<input type="text" id="new_contact_address" placeholder="Address" />		
+			<button id="add_new_contact" class="btn btn-small btn-success">+ Add</button>
+		</div>
+	</div>
 </template>
+
+
+<template name="debug_contacts">
+	{{name}} -- {{#each addresses}}{{street}}{{/each}}<br>
+</template>
+
+<template name="navbar">
+		<div class="navbar navbar-inverse">
+	    <div class="navbar-inner">
+		    <a class="brand" target="_blank" href="http://github.com/gogromat">GogromaT</a>
+		    <!--<ul class="nav">
+			    <li class="active"><a href="#">Home</a></li>
+			    <li><a href="#">Link</a></li>
+			    <li><a href="#">Link</a></li>
+		    </ul>-->
+		</div>
+    </div>
+</template>
+
+
+
+
+
 
 
 

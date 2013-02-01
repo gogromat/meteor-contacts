@@ -8,7 +8,7 @@ if (Meteor.isClient) {
 
 
   Template.contacts_view.contacts = function () {
-    return Contacts.find({}, {sort: {name: 1, address: 1}});
+    return Contacts.find({}, {sort: {name: 1}});//, address: 1
   };
 
   //Template.leaderboard.selected_name = function () {
@@ -37,11 +37,22 @@ if (Meteor.isClient) {
       'click #add_new_contact': function() {
         Contacts.insert(
           { 
-            name:   document.getElementById('new_contact_name').value,
-            address:document.getElementById('new_contact_address').value
+            name:     document.getElementById('new_contact_name').value,
+            addresses:[{street:document.getElementById('new_contact_address').value}]
           });
         document.getElementById('new_contact_name').value = "";
         document.getElementById('new_contact_address').value = "";
+      }
+  });
+
+  Template.contact_row.events({
+      'click .remove-contact': function() {
+        Contacts.remove(this._id);
+      },
+      'click .add_another_address': function() {
+        Contacts.update(this._id, 
+          {$push: {addresses: { street: document.getElementById(this._id+'_add_address').value } } });
+        document.getElementById(this._id+'_add_address').value = "";
       }
   });
 
@@ -57,10 +68,20 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     if (Contacts.find().count() === 0) {
       var contacts = 
-      		[{name: "My Brother",address: "79 Brighton"},
-           {name: "My Sister", address: "Not Born Yet"},
-           {name: "My Father", address: "201 Brighton"}, 
-           {name: "My Mother", address: "79 Brighton"} ];
+      		[
+            {"name": "My Brother","addresses": [
+                                    {"street":"79 Brighton"}
+                                               ]  },
+            {"name": "My Sister", "addresses": [
+                                    {"street":"Not Born Yet"}
+                                               ] },
+            {"name": "My Father", "addresses": [
+                                    {"street":"201 Brighton"}
+                                               ] }, 
+            {"name": "My Mother", "addresses": [
+                                    {"street":"79 Brighton"}]  
+                                                 } 
+          ];
       for (var i = 0; i < contacts.length; i++) {
         Contacts.insert(contacts[i]);
       }
