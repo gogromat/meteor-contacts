@@ -21,7 +21,12 @@
 	<div class="row-fluid">
 
 	
-		<div class="span3" id="LeftSidebar"></div>
+		<div class="span1" id="LeftSidebar">
+		</div>
+	
+		<div class="span2" id="LeftSidebar2">
+			{{>lists_filter}}
+		</div>
 		
 
 		<div class="span6" id="mainSpan">
@@ -49,11 +54,24 @@
 </template>
 
 
+<template name="lists_filter">
+	Show Lists:
+	{{#each lists}}
+		<br>
+		<button class="button btn-small btn-success fixed-200">
+			{{list_name}}
+		</button>
+	{{/each}}
+</template>
+
+
 <template name="address_filter">
-	Show:
+	Show Addresses:
 	{{#each addresses}}
 		<br>
-		<button class="button btn-small btn-info fixed-200">{{streets}} <span class="count">({{count}})</span></button>
+		<button class="button btn-small btn-info fixed-200 address-filter">
+			{{streets}} <span class="count">({{count}})</span>
+		</button>
 	{{/each}}
 </template>
 

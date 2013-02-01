@@ -2,33 +2,32 @@
 // it is backed by a MongoDB collection named "contacts".
 
 Contacts = new Meteor.Collection("contacts");
+Lists    = new Meteor.Collection("lists");
 
 
 if (Meteor.isClient) {
 
+  // Name of currently selected tag for filtering
+  Session.set('address_filter', null);
+  Session.set('lists_filter', null);
+
+
 
   Template.contacts_view.contacts = function () {
 
-    return Contacts.find({}, {sort: {name: 1}});//, address: 1
-  };
+    var me = {};
 
-  //Template.leaderboard.selected_name = function () {
-  //  var player = Players.findOne(Session.get("selected_player"));
-  //  return player && player.name;
-  //};
-  //Template.player.selected = function () {
-  //  return Session.equals("selected_player", this._id) ? "selected" : '';
-  //};
-  //Template.leaderboard.events({
-  //  'click input.inc': function () {
-  //   Players.update(Session.get("selected_player"), {$inc: {score: 5}});
-  //  }
-  //});
-  //Template.player.events({
-  //  'click': function () {
-  //    Session.set("selected_player", this._id);
-  // }
-  //});
+    var address_filter = Session.get('address_filter');
+    console.log(address_filter);
+
+    if (address_filter) {
+      me.addresses = {"street":address_filter};
+    }
+
+    //console.log(me);
+
+    return Contacts.find(me, {sort: {name: 1}});//, address: 1
+  };
 
 
   Template.contacts_view.events({
@@ -39,10 +38,16 @@ if (Meteor.isClient) {
           return false;
         }
         if (address === "") {
-          Contacts.insert({name:name});
+          Contacts.insert({
+            name : name,
+            list_id : Session.get('lists_filter')});
         } else {
-          Contacts.insert({name:name,addresses:[{street:address}]});
+          Contacts.insert({
+            name : name,
+            addresses : [{street:address}],
+            list_id : Session.get('lists_filter')});
         }
+        Session.set('address_filter', null);
         document.getElementById('new_contact_name').value = "";
         document.getElementById('new_contact_address').value = "";
       }
@@ -102,6 +107,9 @@ if (Meteor.isClient) {
 
 
 
+  /* FILTERS */
+
+      /* BY ADDRESS */
   Template.address_filter.addresses = function() {
     var addresses = [];
     var total_count = 0;
@@ -129,6 +137,49 @@ if (Meteor.isClient) {
   };
 
 
+      /* BY LISTS */
+  Template.lists_filter.lists = function() {
+    var lists = [];
+
+    Lists.find({}).forEach(function(list) {
+      lists.push(list);
+    });
+
+    lists.unshift({list_name: null});
+    return lists;
+    //todo: add count
+  }
+
+  Template.lists_filter.list_name = function () {
+    return this.list_name || "Global List";
+  };
+
+
+  Template.lists_filter.events({
+    'mousedown .lists-filter': function(env) {
+      if (Session.equals('lists-filter', this._id)) {
+        Session.set('lists-filter', 1);
+      } else {
+        Session.set('lists-filter', this._id);
+      }
+    }
+  });
+
+
+
+
+  Template.address_filter.events({
+    'mousedown .address-filter': function(env) {
+      if (Session.equals('address_filter', this.street)) {
+        Session.set('address_filter', null);
+      } else {
+        Session.set('address_filter', this.street);
+      }
+    }
+  });
+
+
+
 
 }
 
@@ -136,21 +187,48 @@ if (Meteor.isClient) {
 // On server startup, create some contacts if the database is empty.
 if (Meteor.isServer) {
   Meteor.startup(function () {
+    if (Lists.find().count() === 0) {
+      var family_list_id  = Lists.insert({"list_name":"Friends"});
+      var friends_list_id = Lists.insert({"list_name":"Friends"});
+    }
     if (Contacts.find().count() === 0) {
       var contacts = 
       		[
             {"name": "My Brother","addresses": [
-                                    {"street":"79 Brighton"}
-                                               ]  },
-            {"name": "My Sister", "addresses": [
-                                    {"street":"Not Born Yet"}
-                                               ] },
+                                    {"street":"79 Brighton 11th St"},{"street":"201 Brighton 1st Rd"}
+                                               ], 
+                                  "lists" :    [
+                                   {"list_id": family_list_id}
+                                               ]  
+            },
+            {"name": "Me",        "addresses": [
+                                    {"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}
+                                               ], 
+                                  "lists" :    [
+                                   {"list_id": family_list_id}
+                                               ]  
+            },
             {"name": "My Father", "addresses": [
-                                    {"street":"201 Brighton"}
-                                               ] }, 
+                                    {"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}
+                                               ], 
+                                  "lists" :    [
+                                   {"list_id": family_list_id}
+                                               ]  
+            },       
             {"name": "My Mother", "addresses": [
-                                    {"street":"79 Brighton"}]  
-                                                 } 
+                                    {"street":"79 Brighton 11th St"}
+                                               ], 
+                                  "lists" :    [
+                                   {"list_id": family_list_id}
+                                               ]  
+            },
+            {"name": "Max Godko", "addresses": [
+                                    {"street":"Avenue U"}
+                                               ], 
+                                  "lists" :    [
+                                   {"list_id": friends_list_id}, {"list_id":family_list_id}
+                                               ]  
+            }
           ];
       for (var i = 0; i < contacts.length; i++) {
         Contacts.insert(contacts[i]);
