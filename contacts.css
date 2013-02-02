@@ -24,9 +24,38 @@ td {
     vertical-align: top;
 }
 
+.list_title {
+    margin-bottom: 10px;
+    margin-top: 5px;
+    /*padding-top: 5px;*/
+    /*padding-bottom:  5px;*/
+    font-size:       2.1em;
+    font-weight:     bold;
+    text-decoration: underline;
+    text-align:      center;
+}
 
-#RightSidebar {
+.address_tag_title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: grey;
+}
 
+.lists-filter {
+    cursor: pointer;
+    height: 50px;
+    margin: 0px;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.lists-filter.selected {
+    background-color: #99BBEE;    
+}
+
+
+#LeftSidebar {
+    background-color: #DCDCDC;
 }
 
 .fixed-200 {
@@ -34,8 +63,45 @@ td {
     max-width: 200px;
 }
 
+.lightgrey {
+    color: #DCDCDC;
+}
+
+.address-tag {
+    background-color: #E0EAF1;
+    color:            #3E6D8E;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top:    5px;
+    padding-bottom: 5px;
+    padding-left:   5px;
+    cursor: pointer;
+    text-decoration: none;
+    border-top:     solid 1px lightgrey;
+    border-left:    solid 1px lightgrey;
+    border-bottom:  solid 1px #37607D;
+    border-right:   solid 1px #37607D; 
+    display: inline-block;
+}
+
+.address-tag:hover {
+    background-color: #3E6D8E;
+    color: #E0EAF1;
+    border-bottom: 1px solid #37607D;
+    border-right: 1px solid #37607D;
+}
+
 .count {
     text-align: right;
+    color: #808080;
+}
+
+#new_list_name {
+    width: 120px;
+}
+
+.lightGrey {
+    color: #808080;
 }
 
 /* HEADER */
@@ -98,8 +164,9 @@ article, aside, details, figcaption, figure, footer, header, hgroup, nav, sectio
 }
 
 header {
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 }
+
 
 .lead {
     font-size: 21px;
@@ -137,4 +204,8 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 70px;
     padding: 30px 0;
     text-align: center;
+}
+
+footer {
+    margin-top: 0px;
 }

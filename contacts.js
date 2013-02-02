@@ -1,15 +1,44 @@
 // Set up a collection to contain player information. On the server,
 // it is backed by a MongoDB collection named "contacts".
 
-Contacts = new Meteor.Collection("contacts");
 Lists    = new Meteor.Collection("lists");
+Contacts = new Meteor.Collection("contacts");
 
 
 if (Meteor.isClient) {
 
-  // Name of currently selected tag for filtering
+  // Name of currently selected list
+  Session.set('selected_list_id', null);
+
+  // Name of currently selected address tag for filtering
   Session.set('address_filter', null);
-  Session.set('lists_filter', null);
+
+
+  // Subscribe to 'lists' collection on startup.
+  // Select a list once data has arrived.
+  Meteor.subscribe("lists", function() {
+    if (!Session.get("lists_filter")) {
+      var list = Lists.findOne({}, {sort : {name: 1}});
+      //todo: Routes
+    }
+  });
+
+  // Always be subscribed to the contacts for the selected list.
+  /*Meteor.autosubscribe(function () {
+    var lists_filter = Session.get('selected_list_id');
+    if (lists_filter)
+      Meteor.subscribe('contacts', lists_filter);
+  });*/
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -17,16 +46,22 @@ if (Meteor.isClient) {
 
     var me = {};
 
-    var address_filter = Session.get('address_filter');
-    console.log(address_filter);
+    // LIST
+    var list_id = Session.get('selected_list_id');
+    
+    if (list_id) {
+      me.lists = {"list_id":list_id};
+    }
 
+    // ADDRESS
+    var address_filter = Session.get('address_filter');
     if (address_filter) {
       me.addresses = {"street":address_filter};
     }
 
-    //console.log(me);
-
-    return Contacts.find(me, {sort: {name: 1}});//, address: 1
+    var contacts =  Contacts.find(me, {sort: {name: 1}}); 
+    //console.log(me,contacts.collection.docs);
+    return contacts;
   };
 
 
@@ -40,12 +75,14 @@ if (Meteor.isClient) {
         if (address === "") {
           Contacts.insert({
             name : name,
-            list_id : Session.get('lists_filter')});
+            lists: { "list_id" : Session.get('selected_list_id')}}
+            );
         } else {
           Contacts.insert({
             name : name,
             addresses : [{street:address}],
-            list_id : Session.get('lists_filter')});
+            lists: { "list_id" : Session.get('selected_list_id')}}
+            );
         }
         Session.set('address_filter', null);
         document.getElementById('new_contact_name').value = "";
@@ -107,17 +144,40 @@ if (Meteor.isClient) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /* FILTERS */
 
       /* BY ADDRESS */
   Template.address_filter.addresses = function() {
     var addresses = [];
     var total_count = 0;
+    var list_id = Session.get('selected_list_id');
 
-    Contacts.find({}).forEach(function(contact) {
+    if (!list_id) {
+      contacts = Contacts.find({});
+    } else {
+      contacts = Contacts.find({"lists":{"list_id": Session.get('selected_list_id')}});
+    }
+    //console.log("All contacts are:",contacts);
+
+    contacts.forEach(function(contact) {
       _.each(contact.addresses, function(contact_address) {
         var new_street = _.find(addresses, function (address) { return address.street === contact_address.street;});
-        if (! new_street) {
+        if (!new_street) {
           addresses.push({street: contact_address.street, count: 1});
         } else {
           new_street.count++;
@@ -136,6 +196,27 @@ if (Meteor.isClient) {
     return this.street || "All streets";
   };
 
+  Template.address_filter.events({
+    'mousedown .address-filter': function(env) {
+      if (Session.equals('address_filter', this.street)) {
+        Session.set('address_filter', null);
+      } else {
+        Session.set('address_filter', this.street);
+      }
+    }
+  });
+
+
+
+
+
+
+
+
+
+
+
+
 
       /* BY LISTS */
   Template.lists_filter.lists = function() {
@@ -151,37 +232,150 @@ if (Meteor.isClient) {
   }
 
   Template.lists_filter.list_name = function () {
-    return this.list_name || "Global List";
+    return this.list_name || "All Contacts";
+  };
+
+  Template.lists_filter.selected = function () {
+    var id = null;
+    if (this._id) {
+      id = this._id;
+    }
+    return Session.equals('selected_list_id', id) ? 'selected' : '';
   };
 
 
   Template.lists_filter.events({
-    'mousedown .lists-filter': function(env) {
-      if (Session.equals('lists-filter', this._id)) {
-        Session.set('lists-filter', 1);
-      } else {
-        Session.set('lists-filter', this._id);
+    'mousedown .lists-filter' : function(env, tmpl) {
+      id = null;
+      if (this._id) {
+        id = this._id;
+      }
+      Session.set('selected_list_id', id);
+      console.log('Click on list ', id, 'Setting session list_id to ',id);
+      Meteor.flush();
+    },
+    'click  .add-list' : function(env) {
+      var new_list_name = document.getElementById('new_list_name').value;
+      if (new_list_name !== "") {
+        var new_list_id = 0;
+        Meteor.setTimeout(function() {
+          new_list_id = Lists.insert({"list_name":new_list_name});
+          Meteor.flush();
+          Meteor.setTimeout(function() {
+            Session.set("lists_filter",new_list_id);
+          },300);
+        },300);
+        //todo: fix
+        document.getElementById('new_list_name').value = "";
       }
     }
   });
-
-
-
-
-  Template.address_filter.events({
-    'mousedown .address-filter': function(env) {
-      if (Session.equals('address_filter', this.street)) {
-        Session.set('address_filter', null);
-      } else {
-        Session.set('address_filter', this.street);
-      }
-    }
-  });
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // On server startup, create some contacts if the database is empty.
@@ -194,45 +388,31 @@ if (Meteor.isServer) {
     if (Contacts.find().count() === 0) {
       var contacts = 
       		[
-            {"name": "My Brother","addresses": [
-                                    {"street":"79 Brighton 11th St"},{"street":"201 Brighton 1st Rd"}
-                                               ], 
-                                  "lists" :    [
-                                   {"list_id": family_list_id}
-                                               ]  
+            {"name": "My Brother",
+             "addresses": [{"street":"79 Brighton 11th St"},{"street":"201 Brighton 1st Rd"}], 
+             "lists"    : [{"list_id": family_list_id}]  
             },
-            {"name": "Me",        "addresses": [
-                                    {"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}
-                                               ], 
-                                  "lists" :    [
-                                   {"list_id": family_list_id}
-                                               ]  
+            {"name": "Me",        
+             "addresses": [{"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}], 
+             "lists"    : [{"list_id": family_list_id}]  
             },
-            {"name": "My Father", "addresses": [
-                                    {"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}
-                                               ], 
-                                  "lists" :    [
-                                   {"list_id": family_list_id}
-                                               ]  
+            {"name": "My Father", 
+             "addresses": [{"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}], 
+             "lists"    : [{"list_id": family_list_id}]  
             },       
-            {"name": "My Mother", "addresses": [
-                                    {"street":"79 Brighton 11th St"}
-                                               ], 
-                                  "lists" :    [
-                                   {"list_id": family_list_id}
-                                               ]  
+            {"name": "My Mother", 
+             "addresses": [{"street":"79 Brighton 11th St"}], 
+             "lists"    : [{"list_id": family_list_id}]  
             },
-            {"name": "Max Godko", "addresses": [
-                                    {"street":"Avenue U"}
-                                               ], 
-                                  "lists" :    [
-                                   {"list_id": friends_list_id}, {"list_id":family_list_id}
-                                               ]  
+            {"name": "Max Godko", 
+             "addresses": [{"street":"Avenue U"}], 
+             "lists"    : [{"list_id": friends_list_id}, {"list_id":family_list_id}]  
             }
           ];
       for (var i = 0; i < contacts.length; i++) {
         Contacts.insert(contacts[i]);
       }
+      //Contacts.insert({"name": "Max Godko","addresses": [{"street":"201 Brighton 1st Rd"},{"street":"79 Brighton 1th St"}],"lists":[{"list_id": 1}]});
     }
   });
 }

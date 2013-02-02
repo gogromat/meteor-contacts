@@ -20,15 +20,11 @@
 	
 	<div class="row-fluid">
 
-	
-		<div class="span1" id="LeftSidebar">
-		</div>
-	
-		<div class="span2" id="LeftSidebar2">
+
+		<div class="span3" id="LeftSidebar">
 			{{>lists_filter}}
 		</div>
 		
-
 		<div class="span6" id="mainSpan">
 			{{#each contacts}}
 	  			{{> contact_item}}
@@ -39,15 +35,11 @@
 			{{#each contacts}}
 		  		{{> debug_contacts}}
 			{{/each}}
-
 		</div>
 
-
-		<div class="span2" id="RightSidebar">
+		<div class="span3" id="RightSidebar">
     		{{>address_filter}}
 		</div>
-
-		<div class="span1" id="RightSidebar2"></div>
 
 	</div>
 
@@ -55,23 +47,30 @@
 
 
 <template name="lists_filter">
-	Show Lists:
+	<div class="list_title">Contact lists</div>
 	{{#each lists}}
-		<br>
-		<button class="button btn-small btn-success fixed-200">
+		<div class="lists-filter {{selected}}">
 			{{list_name}}
-		</button>
+		</div>
 	{{/each}}
+
+	<br>
+
+	<div class="inline form-horizontal">
+		<input type="text" placeholder="Add new type" id="new_list_name" />
+		<button class="button btn-small btn-success add-list">+ List</button>
+	</div>
 </template>
 
 
 <template name="address_filter">
-	Show Addresses:
+	<div class="address_tag_title">Addresses</div>
 	{{#each addresses}}
-		<br>
-		<button class="button btn-small btn-info fixed-200 address-filter">
-			{{streets}} <span class="count">({{count}})</span>
-		</button>
+		<div class="inline address-filter">
+			<div class="fixed-200 address-tag">{{streets}}</div>
+			<span class="count">x {{count}}</span>
+		</div>
+		<div class="clear-inline"></div>
 	{{/each}}
 </template>
 
@@ -85,7 +84,7 @@
 				<td>
 					<div class="inline form-horizontal">
 						<input type="text" value="{{name}}" class="contact-name" />
-						<button class="button btn-small btn-danger remove-contact">X Contact</button>
+						<button class="button btn-small btn-danger remove-contact">x</button>
 					</div>
 					<div class="clear-inline"></div>
 				</td>
@@ -95,14 +94,14 @@
 					{{#each address_objs}}
 						<div class="inline form-horizontal">
 							<input type="text" value="{{street}}" class="contact-address" />
-							<button class="button btn-small btn-danger remove-address">X Address</button>
+							<button class="button btn-small btn-danger remove-address">x</button>
 						</div>
 						<div class="clear-inline"></div>
 					{{/each}}	
 
 					<div class="inline form-horizontal">
 						<input type="text" id="{{_id}}_add_address" placeholder="Another Address">
-						<button class="button btn-small btn-success add_another_address">+ Address</button>
+						<button class="button btn-small btn-success add_another_address">+</button>
 					</div>
 				</td>
 
