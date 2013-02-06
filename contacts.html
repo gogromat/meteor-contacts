@@ -47,10 +47,11 @@
 
 
 <template name="lists_filter">
-	<div class="list_title">Contact lists</div>
+	<div class="list_title">Contacts lists</div>
 	{{#each lists}}
 		<div class="lists-filter {{selected}}">
 			{{list_name}}
+			<button class="button btn-small btn-danger remove-list">x</button>
 		</div>
 	{{/each}}
 
@@ -67,7 +68,7 @@
 	<div class="address_tag_title">Addresses</div>
 	{{#each addresses}}
 		<div class="inline address-filter">
-			<div class="fixed-200 address-tag">{{streets}}</div>
+			<div class="fixed-200 address-tag {{selected}}">{{streets}}</div>
 			<span class="count">x {{count}}</span>
 		</div>
 		<div class="clear-inline"></div>

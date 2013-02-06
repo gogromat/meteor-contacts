@@ -76,13 +76,13 @@ if (Meteor.isClient) {
           Contacts.insert({
             name : name,
             lists: { "list_id" : Session.get('selected_list_id')}}
-            );
+          );
         } else {
           Contacts.insert({
             name : name,
             addresses : [{street:address}],
             lists: { "list_id" : Session.get('selected_list_id')}}
-            );
+          );
         }
         Session.set('address_filter', null);
         document.getElementById('new_contact_name').value = "";
@@ -159,6 +159,9 @@ if (Meteor.isClient) {
 
 
 
+
+
+
   /* FILTERS */
 
       /* BY ADDRESS */
@@ -193,11 +196,11 @@ if (Meteor.isClient) {
   }
 
   Template.address_filter.streets = function () {
-    return this.street || "All streets";
+    return this.street || "All addresses";
   };
 
   Template.address_filter.events({
-    'mousedown .address-filter': function(env) {
+    'mousedown .address-filter': function(evt) {
       if (Session.equals('address_filter', this.street)) {
         Session.set('address_filter', null);
       } else {
@@ -205,6 +208,13 @@ if (Meteor.isClient) {
       }
     }
   });
+
+  Template.address_filter.selected = function() {
+    return Session.equals("address_filter", this.street) ? 'selected' : '';
+  }
+
+
+
 
 
 
@@ -245,29 +255,43 @@ if (Meteor.isClient) {
 
 
   Template.lists_filter.events({
-    'mousedown .lists-filter' : function(env, tmpl) {
+    'mousedown .lists-filter' : function(evt, tmpl) {
       id = null;
       if (this._id) {
         id = this._id;
       }
       Session.set('selected_list_id', id);
-      console.log('Click on list ', id, 'Setting session list_id to ',id);
+      Session.set('address_filter', null);
       Meteor.flush();
     },
-    'click  .add-list' : function(env) {
+    'click  .add-list' : function(evt) {
       var new_list_name = document.getElementById('new_list_name').value;
       if (new_list_name !== "") {
         var new_list_id = 0;
-        Meteor.setTimeout(function() {
-          new_list_id = Lists.insert({"list_name":new_list_name});
-          Meteor.flush();
-          Meteor.setTimeout(function() {
-            Session.set("lists_filter",new_list_id);
-          },300);
-        },300);
+        Meteor.setTimeout(function () {
+          new_list_id = Lists.insert({"list_name": new_list_name});
+          Meteor.setTimeout(function () {
+            Session.set("selected_list_id", new_list_id);
+          }, 300);
+        }, 300);
         //todo: fix
         document.getElementById('new_list_name').value = "";
       }
+    },
+    'click .remove-list' : function(evt) {
+      list_id = this._id;
+      Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
+        if (_.size(contact.lists) > 1) {
+          // Contact on multiple lists
+          Contacts.remove({"lists":{"list_id": list_id}});
+        } else {
+          // Contact on this list only
+          Contacts.remove({_id:contact._id});
+        }
+      });
+      // Delete from Lists
+      //list = Lists.find({_id: list_id});
+      Lists.remove({_id: list_id});
     }
   });
 }
