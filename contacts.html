@@ -2,56 +2,80 @@
 	<title>My Contacts</title>
 </head>
 
-
 <body>
 
 	{{>navbar}}
+	
+	{{>header}}
 
-    {{>header}}
-
-	{{> contacts_view}}
-
+	{{>pre_view}}
+	
+	{{>contacts_view}}
+	
 	{{>footer}}
 
 </body>
 
+<template name="pre_view">
+	<div class="page">
+		<div class="page-region">
+			<div class="page-region-content">
+				<div class="grid">
+					<div class="row">
+						<div class="span12 padding10 fg-color-darken text-center">
+							Your contacts anywhere
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+
 
 <template name="contacts_view">
-	
-	<div class="row-fluid">
 
+	<div class="page">
+		<div class="page-region">
+			<div class="page-region-content">
+				<div class="grid span16">
 
-		<div class="span3" id="LeftSidebar">
-			{{>lists_filter}}
+					<div class="row">
+
+						<div class="span4">
+							{{>lists_filter}}
+						</div>
+						
+						<div class="span8" id="mainSpan">
+							{{#each contacts}}
+					  			{{> contact_item}}
+							{{/each}}
+
+							{{>add_contact}}
+
+						</div>
+
+						<div class="span4" id="RightSidebar">
+							{{>address_filter}}
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		
-		<div class="span6" id="mainSpan">
-			{{#each contacts}}
-	  			{{> contact_item}}
-			{{/each}}
-
-			{{>add_contact}}
-
-			{{#each contacts}}
-		  		{{> debug_contacts}}
-			{{/each}}
-		</div>
-
-		<div class="span3" id="RightSidebar">
-    		{{>address_filter}}
-		</div>
-
 	</div>
 
 </template>
 
 
 <template name="lists_filter">
-	<div class="list_title">Contacts lists</div>
+
+	<h3 class="fg-color-darken">Contact Lists</h3>
+	
 	{{#each lists}}
 		<div class="lists-filter {{selected}}">
 			{{list_name}}
-			<button class="button btn-small btn-danger remove-list">x</button>
+			<button class="button bg-color-red remove-list ">x</button>
 		</div>
 	{{/each}}
 
@@ -59,13 +83,15 @@
 
 	<div class="inline form-horizontal">
 		<input type="text" placeholder="Add new type" id="new_list_name" />
-		<button class="button btn-small btn-success add-list">+ List</button>
+		<button class="button bg-color-green add-list">+ List</button>
 	</div>
 </template>
 
 
 <template name="address_filter">
-	<div class="address_tag_title">Addresses</div>
+	<!-- <div class="address_tag_title">Addresses</div> -->
+	<h3 class="fg-color-darken">Addresses</h3>
+	
 	{{#each addresses}}
 		<div class="inline address-filter">
 			<div class="fixed-200 address-tag {{selected}}">{{streets}}</div>
@@ -77,40 +103,32 @@
 
 
 <template name="contact_item">
-	<!-- <div class="inline"> -->
-		<!-- <div class="form-horizontal"> -->
-		<table class="contactTable">
-			<tr>
-				
-				<td>
-					<div class="inline form-horizontal">
-						<input type="text" value="{{name}}" class="contact-name" />
-						<button class="button btn-small btn-danger remove-contact">x</button>
-					</div>
-					<div class="clear-inline"></div>
-				</td>
-				
-				<td> 
 
-					{{#each address_objs}}
-						<div class="inline form-horizontal">
-							<input type="text" value="{{street}}" class="contact-address" />
-							<button class="button btn-small btn-danger remove-address">x</button>
-						</div>
-						<div class="clear-inline"></div>
-					{{/each}}	
 
-					<div class="inline form-horizontal">
-						<input type="text" id="{{_id}}_add_address" placeholder="Another Address">
-						<button class="button btn-small btn-success add_another_address">+</button>
-					</div>
-				</td>
 
-				<td></td>
-			</tr>
-		</table>
-		<!-- </div> -->
-	<!-- </div> -->
+
+		<div class="span3">
+			<div class="input-control text">
+				<input type="text" value="{{name}}" class="with-helper contact-name" />
+				<button class="helper remove-contact" tabindex="-1" type="button"></button>
+			</div>			
+		</div>
+
+
+		<div class="span4">
+			{{#each address_objs}}
+				<div class="input-control text">
+					<input type="text" value="{{street}}" class="with-helper contact-address" />
+					<button class="helper remove-address"></button>
+				</div>
+			{{/each}}	
+
+			<div class="input-control text">
+				<input type="text" id="{{_id}}_add_address" class="with-helper"placeholder="Another Address">
+				<button class="helper add_another_address plus"></button>
+			</div>
+		</div>
+
 </template>	
 
 
@@ -118,58 +136,59 @@
 	<div class="well" id="new_contact">
 		<input type="text" id="new_contact_name"    placeholder="Name" />
 		<input type="text" id="new_contact_address" placeholder="Address" />		
-		<button id="add_new_contact" class="btn btn-small btn-success">+ Add</button>
+		<button id="add_new_contact" class="btn bg-color-green small">+ Add</button>
 	</div>
 </template>
 
 
-<template name="debug_contacts">
-	{{name}} --
-	[{{#each addresses}}
-		{{street}},
-	{{/each}}]<br>
-</template>
+
 
 <template name="navbar">
-		<div class="navbar navbar-inverse">
-	    <div class="navbar-inner">
-		    <a class="brand" target="_blank" href="http://github.com/gogromat">GogromaT</a>
-		    <!--<ul class="nav">
-			    <li class="active"><a href="#">Home</a></li>
-			    <li><a href="#">Link</a></li>
-			    <li><a href="#">Link</a></li>
-		    </ul>-->
-		</div>
-    </div>
+
+	<div class="page">
+		<div class="nav-bar">
+			<div class="nav-bar-inner padding10">
+				
+				<span class="pull-menu"></span>
+
+				<span class="element brand">
+					<i class="icon-book"></i>
+		    		<a class="fg-color-yellow place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts">Meteor Contacts</a>
+				</span>
+
+		    	<div class="divider"></div>
+
+		    	<ul class="menu">
+		    		<li><a href="/">Home</a></li>
+		    		<li data-role="dropdown">
+		    			<a href="#">About</a>
+		    			<ul class="dropdown-menu">
+		    				<li><a href="contact">Contact Us</a></li>
+		    				<li class="divider"></li>
+		    				<li><a href="#">...</a></li>
+		    			</ul>
+		    		</li>
+		    	</ul>
+
+			</div>
+    	</div>
+	</div>
+		
 </template>
 
-
-
-
-
-
-
-
-
-
-
-
-
 <template name="header">
-	<header class="jumbotron subhead">
-		<div class="container">
-			<h1>Contacts</h1>
-			<p class="lead">Your Contacts anywhere</p>
-		</div>
-	</header>
+
 </template>
 
 
 <template name="footer">
-	<footer class="footer">
-		<div class="container">
-			<p>Designed by <a target="_blank" href="http://github.com/gogromat">GogromaT</a><p>
-			<p>2013</p>
+	<div class="page">
+		<div class="nav-bar">
+			<div class="nav-bar-inner padding10">
+				<span class="element">Meteor Contacts ©, designed by 
+					<a target="_blank" href="http://github.com/gogromat" class="fg-color-yellow">GogromaT</a>, 2013
+				</span>
+			</div>
 		</div>
-	</footer>
+	</div>
 </template>
