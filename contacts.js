@@ -16,6 +16,9 @@ if (Meteor.isClient) {
   // Name of currently selected phone tag for filtering
   Session.set('phone_filter', null);
 
+
+  Session.set('search_contacts', null);
+
   // Contact view
   Session.set('contacts_view_type', 'list');
 
@@ -63,9 +66,36 @@ if (Meteor.isClient) {
       me.phones = {"number":phone_filter};
     }
 
-    var contacts =  Contacts.find(me, {sort: {name: 1}}); 
+    // SEARCH ALL FIELDS
+    var search_contacts = Session.get('search_contacts');
+    if (search_contacts) {
+      var pattern = new RegExp(search_contacts,"i"),
+          contacts = Contacts.find( 
+          {$where : 
+            function() 
+            { 
+              var street_equal = false,
+                  number_equal = false;
+              _.each(this.addresses, function(address) {      
+                if (pattern.test(address.street)) {
+                  street_equal = true;
+                }
+              });
+               _.each(this.phones, function(phone) {      
+                if (pattern.test(phone.number)) {
+                  number_equal = true;
+                }
+              });
+              return (pattern.test(this.name) || street_equal == true || number_equal == true);
+            } 
+          }, {sort: {name: 1}} );
+    } else {
+      var contacts = Contacts.find(me, {sort: {name: 1}}); 
+    }
+
+
     //console.log(me,contacts.collection.docs);
-    return contacts;
+    return contacts;//Contacts.find();
   };
 
 
@@ -76,7 +106,7 @@ if (Meteor.isClient) {
 
   Template.contacts_view.events({
       'click #add_new_contact': function() {
-        console.log('c');
+        console.log('adding new contact...');
         var new_contact = $("#new_contact_name"), 
             name        = new_contact.val(),
             new_address = $("#new_contact_address"),
@@ -290,6 +320,19 @@ if (Meteor.isClient) {
   }
 
 
+
+    /* BY EVERYTHING */
+  Template.search_contacts.events({
+    'keyup #search_contacts': function(evt) {
+      var value = evt.target.value.trim();
+      console.log("Search Contacts:",value);
+      if (Session.equals('search_contacts', value)) {
+        Session.set('search_contacts', null);
+      } else {
+        Session.set('search_contacts', value);
+      }
+    }
+  });
 
 
 
@@ -568,3 +611,5 @@ if (Meteor.isServer) {
     }
   });
 }
+
+

@@ -55,7 +55,14 @@
 			<tr class="main-table-row">
 				<td>
 					{{>lists_filter}}
+					<hr>
+					<h4>Search Contacts</h4>
+					{{>search_contacts}}
+					<hr>
+					<h4>Address filter</h4>
 					{{>address_filter}}
+					<hr>
+					<h4>Phones filter</h4>
 					{{>phone_filter}}
 				</td>
 				<td colspan="2">
@@ -73,13 +80,14 @@
 
 <template name="lists_filter">
 	
+	<h4>Add new List</h4>
 	<div class="input-control text">
 		<input type="text" placeholder="Add List" id="new_list_name" class="with-helper" />
 		<button class="helper helper-plus-2 add-list" tabindex="-1" type="button"></button>
 	</div>
 	
 	<hr>
-
+	<h4>Lists filter</h4>
 	{{#each lists}}
 		<div class="input-control text lists-filter">
 			<input type="text" value="{{list_name}}" class="with-helper {{selected}}" />
@@ -136,7 +144,12 @@
 	</div>	
 </template>	
 
-
+<template name="search_contacts">
+	<div class="input-control text">
+		<input type="text" class="with-helper" id="search_contacts" placeholder="Type to search contacts"/>
+		<button class="btn-search"></button>
+	</div>
+</template>
 
 <template name="contact_item">
 		{{#if contacts_view_type}}<div class="contact-div-full"><hr></div>{{/if}}
@@ -176,7 +189,6 @@
 		</div>
 </template>	
 
-
 <template name="add_contact">
 	<div class="contact-div-full bg-color-blueLight">
 		Name
@@ -196,8 +208,6 @@
 		</div>
 	</div>
 </template>
-
-
 
 <template name="header">
 
@@ -250,8 +260,7 @@
 	<div class="page bg-color-blueLight padding10">
 		<span class="element">Meteor Contacts<!--©-->, 2013, designed by 
 			<a target="_blank" href="http://github.com/gogromat">
-				<i class="icon-github-2"></i>
-				GogromaT
+				<i class="icon-github-2"></i> GogromaT
 			</a>
 		</span>
 	</div>
