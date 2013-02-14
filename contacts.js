@@ -13,6 +13,11 @@ if (Meteor.isClient) {
   // Name of currently selected address tag for filtering
   Session.set('address_filter', null);
 
+  // Contact view
+  Session.set('contacts_view_type', 'list');
+
+
+
 
   // Subscribe to 'lists' collection on startup.
   // Select a list once data has arrived.
@@ -57,6 +62,11 @@ if (Meteor.isClient) {
   };
 
 
+  Template.contacts_view.contacts_view_type = function () {
+    return Session.get('contacts_view_type') === 'list' ? 'contacts_view_type' : '';
+  };
+
+
   Template.contacts_view.events({
       'click #add_new_contact': function() {
         console.log('c');
@@ -80,6 +90,12 @@ if (Meteor.isClient) {
         Session.set('address_filter', null);
         document.getElementById('new_contact_name').value = "";
         document.getElementById('new_contact_address').value = "";
+      },
+      'click .contact_list_view': function() {
+        Session.set('contacts_view_type', 'list');
+      },
+      'click .contact_grid_view': function() {
+        Session.set('contacts_view_type', 'grid');
       }
   });
 
@@ -184,7 +200,6 @@ if (Meteor.isClient) {
           addresses.push({street: contact_address.street, count: 1});
         } else {
           old_street.count++;
-          console.log(old_street);
         }
       });
       contact_count++;

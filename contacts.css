@@ -38,6 +38,7 @@ table, td, th {
     width: 22%;
 }
 .contact_td {
+    width: 8%;
 }
 
 .bottom {
@@ -53,5 +54,16 @@ table, td, th {
 }
 
 .list-unselected {
-    cursor:hand;cursor:pointer;
+    cursor: hand;
+    cursor: pointer;
+}
+
+.inline {
+    display: inline;
+}
+
+
+
+.helper-plus-2:before {
+    content: "\e08c" !important;
 }

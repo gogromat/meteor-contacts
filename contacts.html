@@ -28,6 +28,7 @@
 		<colgroup>
 			<col class="list_td"/>
 			<col class="contact_td"/>
+			<col class="contact_list_control"/>
 		</colgroup>
 		<thead>
 			<tr>
@@ -37,19 +38,35 @@
 				<td>
 					<h3>Contacts</h3>
 				</td>
+				<td>
+					<div class="toolbar">
+						<button class="contact_list_view {{#if contacts_view_type}}bg-color-greenLight{{/if}}">
+							<i class="icon-list"></i>
+						</button>	
+						<button class="contact_grid_view {{#unless contacts_view_type}}bg-color-greenLight{{/unless}}">
+							<i class="icon-grid"></i>
+						</button>
+					</div>
+				</td>
 			</tr>
 		</thead>
 		<tfoot></tfoot>
 		<tbody>
 			<tr class="main-table-row">
-				<td>{{>lists_filter}}</td>
-				<td>
-					{{>add_contact}}
-
-					{{#each contacts}}
-			  			{{> contact_item}}
-					{{/each}}
-				</td>
+					<td>{{>lists_filter}}</td>
+					<td colspan="2">
+						{{>add_contact}}
+						
+						{{#if contacts_view_type}}
+							{{#each contacts}}
+					  			{{> contact_item2}}
+							{{/each}}
+						{{else}}
+							{{#each contacts}}
+					  			{{> contact_item}}
+							{{/each}}
+						{{/if}}
+					</td>
 			</tr>
 		</tbody>
 	</table>
@@ -60,7 +77,7 @@
 	
 	<div class="input-control text">
 		<input type="text" placeholder="Add List" id="new_list_name" class="with-helper" />
-		<button class="helper add-list" type="button">+</button>
+		<button class="helper helper-plus-2 add-list" tabindex="-1" type="button"></button>
 	</div>
 	
 	<hr>
@@ -118,14 +135,17 @@
 	
 			<div class="input-control text">
 				<input type="text" id="{{_id}}_add_address" class="with-helper" placeholder="Another Address">
-				<button class="helper add_another_address plus" type="button"></button>
+				<button class="helper helper-plus-2 add_another_address plus" type="button"></button>
 			</div>
-
-
 
 		</div>
 </template>	
 
+<template name="contact_item2">
+	<div class="bg-color-blueLight padding10 contact-div">
+		Name: {{name}}
+	</div>
+</template>
 
 <template name="add_contact">
 	<div class="contact-div bg-color-blueLight">
@@ -137,7 +157,7 @@
 			<input type="text" id="new_contact_address" placeholder="Address" />
 		</div>
 		<div class="bottom right">
-			<button id="add_new_contact" class="btn bg-color-greenLight small right-bottom">Add New Contact</button>
+			<button id="add_new_contact" class="btn bg-color-greenLight small right-bottom">New Contact</button>
 		</div>
 	</div>
 </template>
