@@ -53,20 +53,14 @@
 		<tfoot></tfoot>
 		<tbody>
 			<tr class="main-table-row">
-					<td>{{>lists_filter}}</td>
-					<td colspan="2">
-						{{>add_contact}}
-						
-						{{#if contacts_view_type}}
-							{{#each contacts}}
-					  			{{> contact_item2}}
-							{{/each}}
-						{{else}}
-							{{#each contacts}}
-					  			{{> contact_item}}
-							{{/each}}
-						{{/if}}
-					</td>
+				<td>{{>lists_filter}}</td>
+				<td colspan="2">
+					{{>add_contact}}
+					
+					{{#each contacts}}
+			  			{{> contact_item}}
+					{{/each}}
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -119,8 +113,10 @@
 
 
 <template name="contact_item">
-
-		<div class="bg-color-blueLight padding10 contact-div">
+		{{#if contacts_view_type}}<div class="contact-div-full"><hr></div>{{/if}}
+		<div class="bg-color-blueLight 
+					padding10 
+					{{#if contacts_view_type}}contact-div-full{{else}}contact-div{{/if}}">
 			<div class="input-control text">
 				<input type="text" value="{{name}}" class="with-helper contact-name" />
 				<button class="helper remove-contact" tabindex="-1" type="button"></button>
@@ -138,23 +134,36 @@
 				<button class="helper helper-plus-2 add_another_address plus" type="button"></button>
 			</div>
 
+			Phones
+			{{#each phones_objs}}
+				<div class="input-control text">
+					<input type="text" value="{{number}}" class="contact-phone" />
+					<button class="helper remove-phone" type="button"></button>
+				</div>
+			{{/each}}
+
+			<div class="input-control text">
+				<input type="text" id="{{_id}}_add_phone" class="with-helper" placeholder="Another Phone">
+				<button class="helper helper-plus-2 add_another_phone plus" type="button"></button>
+			</div>
+
 		</div>
 </template>	
 
-<template name="contact_item2">
-	<div class="bg-color-blueLight padding10 contact-div">
-		Name: {{name}}
-	</div>
-</template>
 
 <template name="add_contact">
-	<div class="contact-div bg-color-blueLight">
+	<div class="contact-div-full bg-color-blueLight">
+		Name
 		<div class="input-control text" id="new_contact">
 			<input type="text" id="new_contact_name" placeholder="Name" />
 		</div>
 		Address
 		<div class="input-control text">
 			<input type="text" id="new_contact_address" placeholder="Address" />
+		</div>
+		Phone
+		<div class="input-control text">
+			<input type="text" id="new_contact_phone" placeholder="xxx-xxx-xxxx" />
 		</div>
 		<div class="bottom right">
 			<button id="add_new_contact" class="btn bg-color-greenLight small right-bottom">New Contact</button>
@@ -173,20 +182,35 @@
 				<span class="pull-menu"></span>
 
 				<span class="element">
-					<i class="icon-book"></i>
-		    		<a class="place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts" id="name">Meteor Contacts</a>
+		    		<a class="place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts" id="name">
+						<i class="icon-book"></i>
+						Meteor Contacts
+					</a>
 				</span>
 
 		    	<div class="divider"></div>
 
 		    	<ul class="menu fg-color-darken">
-		    		<li><a href="/" class="fg-color-darken">Home</a></li>
+		    		<li>
+		    			<a href="/" class="fg-color-darken">
+		    				<i class="icon-home"></i>
+		    				Home
+		    			</a>
+		    		</li>
 		    		<li data-role="dropdown">
-		    			<a href="#" class="fg-color-darken">About</a>
+		    			<a href="#" class="fg-color-darken">
+		    				<i class="icon-info-2"></i>
+		    				About
+		    			</a>
 		    			<ul class="dropdown-menu">
-		    				<li><a href="contact" class="fg-color-darken">Contact Us</a></li>
-		    				<li class="divider"></li>
-		    				<li><a href="#">...</a></li>
+		    				<li>
+		    					<a href="contact" class="fg-color-darken">
+		    						<i class="icon-phone"></i>
+		    						Contact Us
+		    					</a>
+		    				</li>
+		    				<!-- <li class="divider"></li> -->
+		    				<!-- <li><a href="#">...</a></li> -->
 		    			</ul>
 		    		</li>
 		    	</ul>
@@ -198,8 +222,11 @@
 
 <template name="footer">
 	<div class="page bg-color-blueLight padding10">
-		<span class="element">Meteor Contacts ©, 2013, designed by 
-			<a target="_blank" href="http://github.com/gogromat">GogromaT</a>
+		<span class="element">Meteor Contacts<!--©-->, 2013, designed by 
+			<a target="_blank" href="http://github.com/gogromat">
+				<i class="icon-github-2"></i>
+				GogromaT
+			</a>
 		</span>
 	</div>
 </template>
