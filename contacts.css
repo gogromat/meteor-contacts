@@ -1,158 +1,57 @@
-/* CSS declarations go here */
-
-.address_tag_title {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: grey;
+.nav-bar-inner > span > a {
+    font-size: 15px !important;
 }
 
-.fixed-200 {
-    width: 200px;
-    max-width: 200px;
-}
-
-.address-tag {
-    background-color: #E0EAF1;
-    color:            #3E6D8E;
-    margin-top:       5px;
-    margin-bottom:    5px;
-    padding-top:      5px;
-    padding-bottom:   5px;
-    padding-left:     5px;
-    cursor:           pointer;
-    text-decoration:  none;
-    border-top:       solid 1px lightgrey;
-    border-left:      solid 1px lightgrey;
-    border-bottom:    solid 1px #37607D;
-    border-right:     solid 1px #37607D; 
-    display:          inline-block;
-}
-
-.address-tag:hover {
-    background-color: #3E6D8E;
-    color: #E0EAF1;
-    border-bottom: 1px solid #37607D;
-    border-right: 1px solid #37607D;
-}
-
-.address-tag.selected {
-    background-color: #3E6D8E;
-    color: #E0EAF1;
-    border-bottom: 1px solid #37607D;
-    border-right: 1px solid #37607D;
-}
-
-.count {
-    text-align: right;
-    color: #808080;
+.menu > li > a {
+    font-size: 15px !important;
 }
 
 
 
-/* HEADER */
-.jumbotron:after {
-    background: url("http://twitter.github.com/bootstrap/assets/img/bs-docs-masthead-pattern.png") repeat scroll center center transparent;
-    bottom: 0;
-    content: "";
-    display: block;
-    left: 0;
-    opacity: 0.4;
-    position: absolute;
-    right: 0;
-    top: 0;
+.bg-color-maroonLight {
+  background-color: #CAB3BA !important;
 }
 
-.subhead {
-    border-bottom: 1px solid #DDDDDD;
-    text-align: left;
-}
-
-.subhead h1 {
-    font-size: 60px;
-}
-
-.subhead p {
-    margin-bottom: 20px;
-}
-
-.jumbotron {
-    margin-top: -20px;
-}
-
-.jumbotron {
-    background: -webkit-linear-gradient(45deg, #020031 0%,#6d3353 100%);
-    background: linear-gradient(45deg, #020031 0%, #6D3353 100%) repeat scroll 0 0 transparent;
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2) inset, 0 -3px 7px rgba(0, 0, 0, 0.2) inset;
-    color: #FFFFFF;
-    padding: 40px 0;
-    position: relative;
-    text-align: center;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.075);
-}
-
-.jumbotron h1 {
-    font-size: 80px;
-    font-weight: bold;
-    letter-spacing: -1px;
-    line-height: 1;
-}
-
-.jumbotron p {
-    font-size:   24px;
-    font-weight: 300;
-    line-height: 1.25;
-    margin-bottom: 30px;
-}
-
-article, header, section {
-    display: block;
-}
-
-header {
-	margin-bottom: 0px;
+.contact-div {
+    width:  50% !important;
+    float:  left !important;
+    padding: 5px;
 }
 
 
-.lead {
-    font-size: 21px;
-    font-weight: 200;
-    line-height: 30px;
-    margin-bottom: 20px;
+table, td, th {
+    border: none !important;
+    border-collapse: collapse;
 }
 
-p {
-    margin: 0 0 10px;
+.main-table-row {
+    vertical-align: top;
 }
 
-h1 {
-    font-size: 38.5px;
+.lists-filter {
+    cursor:hand;cursor: pointer;
+    border-color: #66A3FF !important;
+
 }
 
-h1, h2, h3 {
-    line-height: 40px;
+.list_td {
+    width: 22%;
+}
+.contact_td {
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color: inherit;
-    font-family: inherit;
-    font-weight: bold;
-    line-height: 20px;
-    margin: 10px 0;
-    text-rendering: optimizelegibility;
+.bottom {
+    vertical-align: bottom;
 }
 
-body {
-    zoom: 1;
+.right.bottom {
+    float:  right;
 }
 
+.list-selected {
+    border: 1px solid blue !important;
+}
 
-
-
-
-
-
-
-
-.plus {
-    content: "\e083" !important;
+.list-unselected {
+    cursor:hand;cursor:pointer;
 }

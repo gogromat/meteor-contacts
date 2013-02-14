@@ -8,7 +8,7 @@
     "basePackages": {
       "router": {},
       "foundation-custom": {},
-      "metroui": {
+      "metrouicss": {
         "path": "../metroui"
       }
     },
@@ -23,7 +23,7 @@
         "tag": "v0.0.7",
         "commit": "78a2f2def62709836c58dcca894ea6f3702d940c"
       },
-      "metroui": {
+      "metrouicss": {
         "path": "../metroui"
       },
       "page-js": {

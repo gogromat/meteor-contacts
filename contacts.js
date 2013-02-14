@@ -24,19 +24,11 @@ if (Meteor.isClient) {
   });
 
   // Always be subscribed to the contacts for the selected list.
-  /*Meteor.autosubscribe(function () {
+  Meteor.autosubscribe(function () {
     var lists_filter = Session.get('selected_list_id');
     if (lists_filter)
       Meteor.subscribe('contacts', lists_filter);
-  });*/
-
-
-
-
-
-
-
-
+  });
 
 
 
@@ -67,6 +59,7 @@ if (Meteor.isClient) {
 
   Template.contacts_view.events({
       'click #add_new_contact': function() {
+        console.log('c');
         var name    = document.getElementById('new_contact_name').value;
         var address = document.getElementById('new_contact_address').value;
         if (name === "") {
@@ -104,9 +97,11 @@ if (Meteor.isClient) {
 
   Template.contact_item.events({
       'click .remove-contact': function() {
+        console.log('c');
         Contacts.remove(this._id);
       },
       'click .add_another_address': function() {
+        console.log('c');
         var id = this._id;
         var address = document.getElementById(this._id + '_add_address').value;
         if (address === "") {
@@ -116,6 +111,7 @@ if (Meteor.isClient) {
         document.getElementById(this._id + '_add_address').value = "";
       },
       'click .remove-address': function(evt) {
+        console.log('c');
         var id  = this.contact_id,
             street = this.street;
         Contacts.update(
@@ -156,18 +152,12 @@ if (Meteor.isClient) {
 
 
 
-
-
-
-
-
-
   /* FILTERS */
 
       /* BY ADDRESS */
   Template.address_filter.addresses = function() {
     var addresses = [];
-    var total_count = 0;
+    var contact_count = 0;
     var list_id = Session.get('selected_list_id');
 
     if (!list_id) {
@@ -177,21 +167,36 @@ if (Meteor.isClient) {
     }
     //console.log("All contacts are:",contacts);
 
+
+    // iterate mongo.db contacts
     contacts.forEach(function(contact) {
-      _.each(contact.addresses, function(contact_address) {
-        var new_street = _.find(addresses, function (address) { return address.street === contact_address.street;});
-        if (!new_street) {
+      var c = contact.addresses;
+      //returns unique address streets
+      var unique_streets = _.map(
+        _.uniq(_.map(c, function(e){
+                          return e.street
+                        })), function(e){
+          return {"street":e} 
+        }); 
+
+      // iterate contacts' addresses
+      _.each(unique_streets, function(contact_address) {
+        // find if we inserted street object already into 'addresses'
+        var old_street = _.find(addresses, function (address) { return address.street === contact_address.street;});
+        if (!old_street) {
+          // push new object
           addresses.push({street: contact_address.street, count: 1});
         } else {
-          new_street.count++;
+          old_street.count++;
+          console.log(old_street);
         }
       });
-      total_count++;
+      contact_count++;
     });
     //sorts by how many times same address repeats (not best, but ok)
     addresses = _.sortBy(addresses, function(address) { return address.street; });
     //also add one empty
-    addresses.unshift({street: null, count: total_count});
+    addresses.unshift({street: null, count: contact_count});
     return addresses;
   }
 
@@ -210,7 +215,7 @@ if (Meteor.isClient) {
   });
 
   Template.address_filter.selected = function() {
-    return Session.equals("address_filter", this.street) ? 'selected' : '';
+    return Session.equals("address_filter", this.street) ? 'bg-color-greenLight ' : '';
   }
 
 
@@ -250,7 +255,7 @@ if (Meteor.isClient) {
     if (this._id) {
       id = this._id;
     }
-    return Session.equals('selected_list_id', id) ? 'selected' : '';
+    return Session.equals('selected_list_id', id) ? 'list-selected' : 'list-unselected';
   };
 
 
@@ -265,7 +270,9 @@ if (Meteor.isClient) {
       Meteor.flush();
     },
     'click  .add-list' : function(evt) {
+      console.log('c');
       var new_list_name = document.getElementById('new_list_name').value;
+      console.log(new_list_name);
       if (new_list_name !== "") {
         var new_list_id = 0;
         Meteor.setTimeout(function () {
@@ -279,6 +286,7 @@ if (Meteor.isClient) {
       }
     },
     'click .remove-list' : function(evt) {
+      console.log('c');
       list_id = this._id;
       Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
         if (_.size(contact.lists) > 1) {

@@ -4,10 +4,8 @@
 
 <body>
 
-	{{>navbar}}
-	
 	{{>header}}
-
+	
 	{{>pre_view}}
 	
 	{{>contacts_view}}
@@ -17,18 +15,8 @@
 </body>
 
 <template name="pre_view">
-	<div class="page">
-		<div class="page-region">
-			<div class="page-region-content">
-				<div class="grid">
-					<div class="row">
-						<div class="span12 padding10 fg-color-darken text-center">
-							Your contacts anywhere
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div style="width:100%;text-align:center;">
+		{{>address_filter}}
 	</div>
 </template>
 
@@ -36,134 +24,147 @@
 
 <template name="contacts_view">
 
-	<div class="page">
-		<div class="page-region">
-			<div class="page-region-content">
-				<div class="grid span16">
+	<table summary="Main view of Contact Lists and contacts each list holds">
+		<colgroup>
+			<col class="list_td"/>
+			<col class="contact_td"/>
+		</colgroup>
+		<thead>
+			<tr>
+				<td>
+					<h3>Contact Lists</h3>
+				</td>
+				<td>
+					<h3>Contacts</h3>
+				</td>
+			</tr>
+		</thead>
+		<tfoot></tfoot>
+		<tbody>
+			<tr class="main-table-row">
+				<td>{{>lists_filter}}</td>
+				<td>
+					{{>add_contact}}
 
-					<div class="row">
-
-						<div class="span4">
-							{{>lists_filter}}
-						</div>
-						
-						<div class="span8" id="mainSpan">
-							{{#each contacts}}
-					  			{{> contact_item}}
-							{{/each}}
-
-							{{>add_contact}}
-
-						</div>
-
-						<div class="span4" id="RightSidebar">
-							{{>address_filter}}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
+					{{#each contacts}}
+			  			{{> contact_item}}
+					{{/each}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </template>
 
 
 <template name="lists_filter">
-
-	<h3 class="fg-color-darken">Contact Lists</h3>
 	
+	<div class="input-control text">
+		<input type="text" placeholder="Add List" id="new_list_name" class="with-helper" />
+		<button class="helper add-list" type="button">+</button>
+	</div>
+	
+	<hr>
+
 	{{#each lists}}
-		<div class="lists-filter {{selected}}">
-			{{list_name}}
-			<button class="button bg-color-red remove-list ">x</button>
+		<div class="input-control text lists-filter">
+			<input type="text" value="{{list_name}}" class="with-helper {{selected}}" />
+			<button class="helper remove-list" type="button"></button>
 		</div>
 	{{/each}}
-
-	<br>
-
-	<div class="inline form-horizontal">
-		<input type="text" placeholder="Add new type" id="new_list_name" />
-		<button class="button bg-color-green add-list">+ List</button>
-	</div>
 </template>
 
 
 <template name="address_filter">
 	<!-- <div class="address_tag_title">Addresses</div> -->
-	<h3 class="fg-color-darken">Addresses</h3>
+	<!-- <h3>Addresses</h3> -->
 	
-	{{#each addresses}}
-		<div class="inline address-filter">
-			<div class="fixed-200 address-tag {{selected}}">{{streets}}</div>
-			<span class="count">x {{count}}</span>
-		</div>
-		<div class="clear-inline"></div>
-	{{/each}}
+		<!-- 
+			<div class="inline address-filter">
+				<div class="fixed-200 address-tag {selected}">{streets}</div>
+				<span class="count">x {count}</span>
+			</div>
+			<div class="clear-inline"></div> 
+		-->
+	<div class="button-set" data-role="button-set" style="padding: 10px;">
+		{{#each addresses}}
+			<button class="shortcut address-filter {{selected}}" style="height:50px;width:150px;">
+		        <span class="icon">
+		            <i class="icon-*"></i>
+		        </span>
+		        <span class="label">
+		            {{streets}}
+		        </span>
+		        <span class="badge bg-color-maroonLight">{{count}}</span>
+		    </button>
+		{{/each}}
+	</div>
 </template>
 
 
 <template name="contact_item">
 
-
-
-
-		<div class="span3">
+		<div class="bg-color-blueLight padding10 contact-div">
 			<div class="input-control text">
 				<input type="text" value="{{name}}" class="with-helper contact-name" />
 				<button class="helper remove-contact" tabindex="-1" type="button"></button>
-			</div>			
-		</div>
-
-
-		<div class="span4">
+			</div>	
+			Addresses
 			{{#each address_objs}}
 				<div class="input-control text">
-					<input type="text" value="{{street}}" class="with-helper contact-address" />
-					<button class="helper remove-address"></button>
+					<input type="text" value="{{street}}" class="contact-address" />
+					<button class="helper remove-address" type="button"></button>
 				</div>
 			{{/each}}	
-
+	
 			<div class="input-control text">
-				<input type="text" id="{{_id}}_add_address" class="with-helper"placeholder="Another Address">
-				<button class="helper add_another_address plus"></button>
+				<input type="text" id="{{_id}}_add_address" class="with-helper" placeholder="Another Address">
+				<button class="helper add_another_address plus" type="button"></button>
 			</div>
-		</div>
 
+
+
+		</div>
 </template>	
 
 
 <template name="add_contact">
-	<div class="well" id="new_contact">
-		<input type="text" id="new_contact_name"    placeholder="Name" />
-		<input type="text" id="new_contact_address" placeholder="Address" />		
-		<button id="add_new_contact" class="btn bg-color-green small">+ Add</button>
+	<div class="contact-div bg-color-blueLight">
+		<div class="input-control text" id="new_contact">
+			<input type="text" id="new_contact_name" placeholder="Name" />
+		</div>
+		Address
+		<div class="input-control text">
+			<input type="text" id="new_contact_address" placeholder="Address" />
+		</div>
+		<div class="bottom right">
+			<button id="add_new_contact" class="btn bg-color-greenLight small right-bottom">Add New Contact</button>
+		</div>
 	</div>
 </template>
 
 
 
-
-<template name="navbar">
+<template name="header">
 
 	<div class="page">
-		<div class="nav-bar">
+		<div class="nav-bar bg-color-blueLight">
 			<div class="nav-bar-inner padding10">
 				
 				<span class="pull-menu"></span>
 
-				<span class="element brand">
+				<span class="element">
 					<i class="icon-book"></i>
-		    		<a class="fg-color-yellow place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts">Meteor Contacts</a>
+		    		<a class="place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts" id="name">Meteor Contacts</a>
 				</span>
 
 		    	<div class="divider"></div>
 
-		    	<ul class="menu">
-		    		<li><a href="/">Home</a></li>
+		    	<ul class="menu fg-color-darken">
+		    		<li><a href="/" class="fg-color-darken">Home</a></li>
 		    		<li data-role="dropdown">
-		    			<a href="#">About</a>
+		    			<a href="#" class="fg-color-darken">About</a>
 		    			<ul class="dropdown-menu">
-		    				<li><a href="contact">Contact Us</a></li>
+		    				<li><a href="contact" class="fg-color-darken">Contact Us</a></li>
 		    				<li class="divider"></li>
 		    				<li><a href="#">...</a></li>
 		    			</ul>
@@ -172,23 +173,13 @@
 
 			</div>
     	</div>
-	</div>
-		
+	</div>		
 </template>
-
-<template name="header">
-
-</template>
-
 
 <template name="footer">
-	<div class="page">
-		<div class="nav-bar">
-			<div class="nav-bar-inner padding10">
-				<span class="element">Meteor Contacts ©, designed by 
-					<a target="_blank" href="http://github.com/gogromat" class="fg-color-yellow">GogromaT</a>, 2013
-				</span>
-			</div>
-		</div>
+	<div class="page bg-color-blueLight padding10">
+		<span class="element">Meteor Contacts ©, 2013, designed by 
+			<a target="_blank" href="http://github.com/gogromat">GogromaT</a>
+		</span>
 	</div>
 </template>
