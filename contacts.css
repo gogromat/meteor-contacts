@@ -17,12 +17,12 @@
     border: 1px dashed #bababa;
     width:  49% !important;
     margin: 3px;
-    float:left !important;
+    float:right !important;
 }
 
 .contact-div:nth-child(even) {
     clear:both;
-    float: right !important;
+    float: left !important;
 }
 
 .contact-div-full {
@@ -30,6 +30,13 @@
     float:  left !important;
     padding: 3px;
 }
+
+@media all and (max-width: 800px) {
+    .contact-div {
+        width: 98% !important;
+    }
+}
+
 
 
 table, td, th {

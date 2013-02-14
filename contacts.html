@@ -16,7 +16,7 @@
 
 <template name="pre_view">
 	<div style="width:100%;text-align:center;">
-		{{>address_filter}}
+		<!-- {>address_filter} -->
 	</div>
 </template>
 
@@ -53,7 +53,11 @@
 		<tfoot></tfoot>
 		<tbody>
 			<tr class="main-table-row">
-				<td>{{>lists_filter}}</td>
+				<td>
+					{{>lists_filter}}
+					{{>address_filter}}
+					{{>phone_filter}}
+				</td>
 				<td colspan="2">
 					{{>add_contact}}
 					
@@ -98,18 +102,40 @@
 		-->
 	<div class="button-set" data-role="button-set" style="padding: 10px;">
 		{{#each addresses}}
-			<button class="shortcut address-filter {{selected}}" style="height:50px;width:150px;">
-		        <span class="icon">
-		            <i class="icon-*"></i>
-		        </span>
+			<button class="shortcut address-filter {{selected}}" style="height:50px;width:100%;">
+		        <!-- <span class="icon"><i class="icon-*"></i></span> -->
 		        <span class="label">
-		            {{streets}}
+		        	{{#if street}}
+		            	{{street}}
+		            {{else}}
+		            	<i class="icon-home"></i>All addresses
+		            {{/if}}
 		        </span>
 		        <span class="badge bg-color-maroonLight">{{count}}</span>
 		    </button>
 		{{/each}}
 	</div>
 </template>
+
+
+<template name="phone_filter">
+	<div class="button-set" data-role="button-set" style="padding: 10px;">
+		{{#each phones}}
+			<button class="shortcut phone-filter {{selected}}" style="height:50px;width:100%;">
+		        <!-- <span class="icon"></span> -->
+		        <span class="label">
+		        	{{#if number}}
+		            	{{number}}
+		            {{else}}
+		            	<i class="icon-phone"></i>All numbers
+		            {{/if}}
+		        </span>
+		        <span class="badge bg-color-maroonLight">{{count}}</span>
+		    </button>
+		{{/each}}
+	</div>	
+</template>	
+
 
 
 <template name="contact_item">

@@ -13,10 +13,11 @@ if (Meteor.isClient) {
   // Name of currently selected address tag for filtering
   Session.set('address_filter', null);
 
+  // Name of currently selected phone tag for filtering
+  Session.set('phone_filter', null);
+
   // Contact view
   Session.set('contacts_view_type', 'list');
-
-
 
 
   // Subscribe to 'lists' collection on startup.
@@ -56,6 +57,12 @@ if (Meteor.isClient) {
       me.addresses = {"street":address_filter};
     }
 
+    // PHONES
+    var phone_filter = Session.get('phone_filter');
+    if (phone_filter) {
+      me.phones = {"number":phone_filter};
+    }
+
     var contacts =  Contacts.find(me, {sort: {name: 1}}); 
     //console.log(me,contacts.collection.docs);
     return contacts;
@@ -75,35 +82,25 @@ if (Meteor.isClient) {
             new_address = $("#new_contact_address"),
             address     = new_address.val().trim(),
             new_phone   = $("#new_contact_phone"),
-            phone       = new_phone.val().trim();
-
-
-        if (phone === "") {
-          phone_obj = {phone:""};
-        } else {
-          phone_obj = {phone:phone};
-        }
-
-
+            phone       = new_phone.val().trim(),
+            new_contact_item = {};
 
         if (name === "") {
           return false;
-        }
-        if (address === "") {
-          Contacts.insert({
-            name : name,
-            phones : [{number:phone}],
-            lists: { "list_id" : Session.get('selected_list_id')}}
-          );
         } else {
-          Contacts.insert({
-            name : name,
-            addresses : [{street:address}],
-            phones    : [{number:phone}],
-            lists: { "list_id" : Session.get('selected_list_id')}}
-          );
+          new_contact_item.name = name;
+          new_contact_item.lists = [{list_id : Session.get('selected_list_id')}];
         }
+        if (address !== "") {
+          new_contact_item.addresses = [{street: address}];
+        }
+        if (phone !== "") {
+          new_contact_item.phones = [{number: phone}];
+        }
+        Contacts.insert(new_contact_item);
+
         Session.set('address_filter', null);
+        Session.set('phone_filter', null);
         new_contact.val("");
         new_address.val("");
         new_phone.val("");
@@ -205,8 +202,18 @@ if (Meteor.isClient) {
         if (old_street !== new_street) {
           Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
           Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
+          Session.set('address_filter', null);
         }
-
+      },
+      'blur .contact-phone': function(evt) {
+        var id = this.contact_id,
+            old_number = this.number,
+            new_number = evt.target.value;
+        if (old_number !== new_number) {
+          Contacts.update(id,{ $pull : {phones : {"number": old_number} } });
+          Contacts.update(id,{ $push : {phones : {"number": new_number} } });
+          Session.set('phone_filter', null);
+        }
       }
   });
 
@@ -266,9 +273,7 @@ if (Meteor.isClient) {
     return addresses;
   }
 
-  Template.address_filter.streets = function () {
-    return this.street || "All addresses";
-  };
+  // Template.address_filter.streets = function () {return this.street || "All addresses";};
 
   Template.address_filter.events({
     'mousedown .address-filter': function(evt) {
@@ -289,9 +294,56 @@ if (Meteor.isClient) {
 
 
 
+    /* BY PHONES */
+  Template.phone_filter.phones = function() {
+    var phones = [];
+    var contact_count = 0;
+    var list_id = Session.get('selected_list_id');
 
+    if (!list_id) {
+      contacts = Contacts.find({});
+    } else {
+      contacts = Contacts.find({"lists":{"list_id": Session.get('selected_list_id')}});
+    }
+    //console.log("All contacts are:",contacts);
 
+    // iterate mongo.db contacts
+    contacts.forEach(function(contact) {
+      // iterate contacts' addresses
+      _.each(contact.phones, function(contact_phone) {
+        // find if we inserted street object already into 'addresses'
+        var old_phone = _.find(phones, function (phone) { return phone.number === contact_phone.number;});
+        if (!old_phone) {
+          // push new object
+          phones.push({number: contact_phone.number, count: 1});
+        } else {
+          old_phone.count++;
+        }
+      });
+      contact_count++;
+    });
+    //sorts by how many times same address repeats (not best, but ok)
+    phones = _.sortBy(phones, function(phone) { return phone.number; });
+    //also add one empty
+    phones.unshift({phone: null, count: contact_count});
+    return phones;
+  }
+ 
+  // Template.phone_filter.numbers = function () {return this.number || "";};
 
+  Template.phone_filter.events({
+    'mousedown .phone-filter': function(evt) {
+      if (Session.equals('phone_filter', this.number)) {
+        Session.set('phone_filter', null);
+      } else {
+        Session.set('phone_filter', this.number);
+      }
+    }
+  });
+
+  Template.phone_filter.selected = function() {
+    return Session.equals("phone_filter", this.number) ? 'bg-color-greenLight ' : '';
+  }
 
 
 
@@ -333,6 +385,7 @@ if (Meteor.isClient) {
       }
       Session.set('selected_list_id', id);
       Session.set('address_filter', null);
+      Session.set('phone_filter', null);
       Meteor.flush();
     },
     'click  .add-list' : function(evt) {
