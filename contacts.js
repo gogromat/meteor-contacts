@@ -101,14 +101,19 @@ if (Meteor.isClient) {
         Contacts.remove(this._id);
       },
       'click .add_another_address': function() {
-        console.log('c');
-        var id = this._id;
-        var address = document.getElementById(this._id + '_add_address').value;
-        if (address === "") {
+        console.log('add another address');
+        var id = this._id,
+            new_address = $("#" + this._id + '_add_address'),
+            new_street  = new_address.val().trim();
+        if (new_street === "") {
           return false;
         }
-        Contacts.update(id, { $push : { addresses: { street : address } } });
-        document.getElementById(this._id + '_add_address').value = "";
+        // street already exists?
+        var isAddressSet = Contacts.findOne({_id: id, "addresses": {"street":new_street}});
+        if (!isAddressSet) {
+          Contacts.update(id, { $push : { addresses: { street : new_street } } });
+        }
+        new_address.val("");
       },
       'click .remove-address': function(evt) {
         console.log('c');
@@ -170,17 +175,8 @@ if (Meteor.isClient) {
 
     // iterate mongo.db contacts
     contacts.forEach(function(contact) {
-      var c = contact.addresses;
-      //returns unique address streets
-      var unique_streets = _.map(
-        _.uniq(_.map(c, function(e){
-                          return e.street
-                        })), function(e){
-          return {"street":e} 
-        }); 
-
       // iterate contacts' addresses
-      _.each(unique_streets, function(contact_address) {
+      _.each(contact.addresses, function(contact_address) {
         // find if we inserted street object already into 'addresses'
         var old_street = _.find(addresses, function (address) { return address.street === contact_address.street;});
         if (!old_street) {
