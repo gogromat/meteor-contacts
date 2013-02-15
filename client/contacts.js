@@ -219,7 +219,7 @@ Template.contact_item.events({
     'blur .contact-name': function(evt) {
       var id  = this._id,
           old_name = this.name,
-          new_name = evt.target.value;
+          new_name = evt.target.value.trim();
       if (old_name !== new_name) {
         if (new_name !== "") {
           Contacts.update(id,{$set : {name : new_name}});
@@ -233,7 +233,7 @@ Template.contact_item.events({
     'blur .contact-address': function(evt) {
       var id = this.contact_id,
           old_street = this.street,
-          new_street = evt.target.value;
+          new_street = evt.target.value.trim();
       if (old_street !== new_street) {
         Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
         if (new_street !== "") {
@@ -245,7 +245,7 @@ Template.contact_item.events({
     'blur .contact-phone': function(evt) {
       var id = this.contact_id,
           old_number = this.number,
-          new_number = evt.target.value;
+          new_number = evt.target.value.trim();
       if (old_number !== new_number) {
         Contacts.update(id,{ $pull : {phones : {"number": old_number} } });
         if (new_number !== "") {
@@ -333,9 +333,9 @@ Template.address_filter.selected = function() {
   /* BY EVERYTHING */
 Template.search_contacts.events({
   'keyup #search_contacts': function(evt) {
+    var value = evt.target.value.trim();
     Session.set('address_filter',null);
     Session.set('phone_filter',  null);
-    var value = evt.target.value.trim();
     if (Session.equals('search_contacts', value)) {
       Session.set('search_contacts', null);
     } else {
@@ -436,7 +436,7 @@ Template.lists_filter.selected = function () {
 
 Template.lists_filter.events({
   'mousedown .lists-filter' : function(evt, tmpl) {
-    id = null;
+    var id = null;
     if (this._id) {
       id = this._id;
     }
@@ -467,14 +467,17 @@ Template.lists_filter.events({
     }
   },
   'blur .list-selected' : function (evt) {
-    console.log("CALLED",evt.target.value,this.list_name);
-    if (evt.target.value !== this.list_name) {
-      
+    console.log('changing list name');
+    var id = this._id,
+        old_name = this.list_name,
+        new_name = evt.target.value.trim();
+    if (new_name && old_name !== new_name) {
+        Lists.update(id, {$set: {"list_name": new_name}});
     }
   },
   'click .remove-list' : function(evt) {
     console.log('removing list...');
-    list_id = this._id;
+    var list_id = this._id;
     Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
       if (_.size(contact.lists) > 1) {
         // Contact on multiple lists
