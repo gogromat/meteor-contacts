@@ -1,0 +1,252 @@
+<head>
+	<title>My Contacts</title>
+</head>
+
+<body>
+
+	{{>header}}
+		
+	{{>contacts_view}}
+	
+	{{>footer}}
+
+</body>
+
+
+<template name="contacts_view">
+
+	<table summary="Main view of Contact Lists and contacts each list holds">
+		<colgroup>
+			<col class="list_td"/>
+			<col class="contact_td"/>
+			<col class="contact_list_control"/>
+		</colgroup>
+		<thead>
+			<tr>
+				<td>
+					<h3>Contact Lists</h3>
+				</td>
+				<td>
+					<h3>Contacts</h3>
+				</td>
+				<td>
+					<div class="toolbar">
+						<button class="contact_grid_view {{#if contacts_view_type}}bg-color-greenLight{{/if}}">
+							<i class="icon-grid"></i>
+						</button>
+						<button class="contact_list_view {{#unless contacts_view_type}}bg-color-greenLight{{/unless}}">
+							<i class="icon-list"></i>
+						</button>	
+					</div>
+				</td>
+			</tr>
+		</thead>
+		<tfoot></tfoot>
+		<tbody>
+			<tr class="main-table-row">
+				<td>
+					{{>lists_filter}}
+					<hr>
+					<h4>Search Contacts</h4>
+					{{>search_contacts}}
+					<hr>
+					<h4>Address filter</h4>
+					{{>address_filter}}
+					<hr>
+					<h4>Phone filter</h4>
+					{{>phone_filter}}
+				</td>
+				<td colspan="2">
+					{{>add_contact}}
+					
+					{{#each contacts}}
+			  			{{> contact_item}}
+					{{/each}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</template>
+
+
+<template name="lists_filter">
+	
+	<h4>Add new List</h4>
+	<div class="input-control text">
+		<input type="text" placeholder="Add List" id="new_list_name" class="with-helper" />
+		<button class="helper helper-plus-2 add-list" tabindex="-1" type="button"></button>
+	</div>
+	
+	<hr>
+	<h4>Lists filter</h4>
+	{{#each lists}}
+		<div class="input-control text lists-filter">
+			<input type="text" value="{{list_name}}" class="with-helper {{selected}}" />
+			<button class="helper remove-list" type="button"></button>
+		</div>
+	{{/each}}
+</template>
+
+<template name="address_filter">
+	<!-- <div class="address_tag_title">Addresses</div> -->
+	<!-- <h3>Addresses</h3> -->
+	
+		<!-- 
+			<div class="inline address-filter">
+				<div class="fixed-200 address-tag {selected}">{streets}</div>
+				<span class="count">x {count}</span>
+			</div>
+			<div class="clear-inline"></div> 
+		-->
+	<div class="button-set" data-role="button-set" style="padding: 10px;">
+		{{#each addresses}}
+			<button class="shortcut address-filter {{selected}}" style="height:50px;width:100%;">
+		        <!-- <span class="icon"><i class="icon-*"></i></span> -->
+		        <span class="label">
+		        	{{#if street}}
+		            	{{street}}
+		            {{else}}
+		            	<i class="icon-home"></i>All addresses
+		            {{/if}}
+		        </span>
+		        <span class="badge bg-color-maroonLight">{{count}}</span>
+		    </button>
+		{{/each}}
+	</div>
+</template>
+
+<template name="phone_filter">
+	<div class="button-set" data-role="button-set" style="padding: 10px;">
+		{{#each phones}}
+			<button class="shortcut phone-filter {{selected}}" style="height:50px;width:100%;">
+		        <!-- <span class="icon"></span> -->
+		        <span class="label">
+		        	{{#if number}}
+		            	{{number}}
+		            {{else}}
+		            	<i class="icon-phone"></i>All numbers
+		            {{/if}}
+		        </span>
+		        <span class="badge bg-color-maroonLight">{{count}}</span>
+		    </button>
+		{{/each}}
+	</div>	
+</template>	
+
+<template name="search_contacts">
+	<div class="input-control text">
+		<input type="text" class="with-helper" id="search_contacts" placeholder="Search contacts"/>
+		<button class="helper" id="delete-search-contacts"></button>
+	</div>
+</template>
+
+<template name="contact_item">
+		{{#unless contacts_view_type}}<div class="contact-div-full"><hr></div>{{/unless}}
+		<div class="bg-color-blueLight 
+					padding10 
+					{{#if contacts_view_type}}contact-div{{else}}contact-div-full{{/if}}">
+			<div class="input-control text">
+				<input type="text" value="{{name}}" class="with-helper contact-name" />
+				<button class="helper remove-contact" tabindex="-1" type="button"></button>
+			</div>	
+			Addresses
+			{{#each address_objs}}
+				<div class="input-control text">
+					<input type="text" value="{{street}}" class="contact-address" />
+					<button class="helper remove-address" type="button"></button>
+				</div>
+			{{/each}}	
+	
+			<div class="input-control text">
+				<input type="text" id="{{_id}}_add_address" class="with-helper" placeholder="Another Address">
+				<button class="helper helper-plus-2 add_another_address plus" type="button"></button>
+			</div>
+
+			Phones
+			{{#each phones_objs}}
+				<div class="input-control text">
+					<input type="text" value="{{number}}" class="contact-phone" />
+					<button class="helper remove-phone" type="button"></button>
+				</div>
+			{{/each}}
+
+			<div class="input-control text">
+				<input type="text" id="{{_id}}_add_phone" class="with-helper" placeholder="Another Phone">
+				<button class="helper helper-plus-2 add_another_phone plus" type="button"></button>
+			</div>
+
+		</div>
+</template>	
+
+<template name="add_contact">
+	<div class="contact-div-full bg-color-blueLight bottom-margin-10">
+		<div class="input-control text" id="new_contact">
+			<i class="icon-user"></i>
+			<input type="text" id="new_contact_name" placeholder="Name" class="new-input"/>
+			<i class="icon-home"></i>
+			<input type="text" id="new_contact_address" placeholder="Address" class="new-input"/>
+			<i class="icon-phone"></i>
+			<input type="text" id="new_contact_phone" placeholder="Phone" class="new-input"/>
+			<button id="add_new_contact" class="btn bg-color-greenLight small top-margin-9">Add Contact</button>
+		</div>
+		<!-- <div class="bottom right"> -->
+		<!-- </div> -->
+	</div>
+</template>
+
+<template name="header">
+
+	<div class="page">
+		<div class="nav-bar bg-color-blueLight">
+			<div class="nav-bar-inner padding10">
+				
+				<span class="pull-menu"></span>
+
+				<span class="element">
+		    		<a class="place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts" id="name">
+						<i class="icon-book"></i>
+						Meteor Contacts
+					</a>
+				</span>
+
+		    	<div class="divider"></div>
+
+		    	<ul class="menu fg-color-darken">
+		    		<li>
+		    			<a href="/" class="fg-color-darken">
+		    				<i class="icon-home"></i>
+		    				Home
+		    			</a>
+		    		</li>
+		    		<li data-role="dropdown">
+		    			<a href="#" class="fg-color-darken">
+		    				<i class="icon-info-2"></i>
+		    				About
+		    			</a>
+		    			<ul class="dropdown-menu">
+		    				<li>
+		    					<a href="contact" class="fg-color-darken">
+		    						<i class="icon-phone"></i>
+		    						Contact Us
+		    					</a>
+		    				</li>
+		    				<!-- <li class="divider"></li> -->
+		    				<!-- <li><a href="#">...</a></li> -->
+		    			</ul>
+		    		</li>
+		    	</ul>
+
+			</div>
+    	</div>
+	</div>		
+</template>
+
+<template name="footer">
+	<div class="page bg-color-blueLight padding10">
+		<span class="element">Meteor Contacts<!--©-->, 2013, developed by 
+			<a target="_blank" href="http://github.com/gogromat">
+				<i class="icon-github-2"></i> GogromaT
+			</a>
+		</span>
+	</div>
+</template>
