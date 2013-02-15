@@ -445,9 +445,10 @@ if (Meteor.isClient) {
       Meteor.flush();
     },
     'click  .add-list' : function(evt) {
-      console.log('adding list...');
-      var new_list_name = document.getElementById('new_list_name').value;
-      console.log(new_list_name);
+
+      var new_list = $('#new_list_name'),
+          new_list_name = new_list.val().trim();
+
       if (new_list_name !== "") {
         var new_list_id = 0;
         Meteor.setTimeout(function () {
@@ -456,8 +457,7 @@ if (Meteor.isClient) {
             Session.set("selected_list_id", new_list_id);
           }, 300);
         }, 300);
-        //todo: fix
-        document.getElementById('new_list_name').value = "";
+        new_list.val("");
       }
     },
     'click .remove-list' : function(evt) {
