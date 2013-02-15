@@ -181,7 +181,8 @@ Template.contact_item.events({
       // street already exists?
       var isAddressSet = Contacts.findOne({_id: id, "addresses": {"street":new_street}});
       if (!isAddressSet) {
-        Contacts.update(id, { $push : { addresses: { street : new_street } } });
+        //Contacts.update(id, { $push : { addresses: { street : new_street } } });
+        Meteor.call("change_address",id,new_street,'add');
       }
       new_address.val("");
     },
@@ -189,9 +190,8 @@ Template.contact_item.events({
       console.log('removing address...');
       var id  = this.contact_id,
           street = this.street;
-      Contacts.update(
-        {_id:id}, 
-        {$pull: {addresses : {"street" : street} } });
+      //Contacts.update(id, {$pull: {addresses : {"street" : street} } });
+      Meteor.call("change_address",id,street,'remove');
     },
     'click .add_another_phone': function () {
       console.log('add another phone');
@@ -204,7 +204,8 @@ Template.contact_item.events({
       // street already exists?
       var isPhoneSet = Contacts.findOne({_id: id, "phones": {"number":new_number}});
       if (!isPhoneSet) {
-        Contacts.update(id, { $push : { phones: { number : new_number } } });
+        Meteor.call("change_phone", id, new_number,'add');
+        //Contacts.update(id, { $push : { phones: { number : new_number } } });
       }
       new_phone.val("");
     },
@@ -212,9 +213,8 @@ Template.contact_item.events({
       console.log('removing phone...');
       var id     = this.contact_id,
           number = this.number;
-      Contacts.update(
-        {_id:id}, 
-        {$pull: {phones : {"number" : number} } });
+      Meteor.call("change_phone", id, number, 'remove');
+      //Contacts.update({_id:id}, {$pull: {phones : {"number" : number} } });
     },
     'blur .contact-name': function(evt) {
       var id  = this._id,
@@ -222,7 +222,7 @@ Template.contact_item.events({
           new_name = evt.target.value.trim();
       if (old_name !== new_name) {
         if (new_name !== "") {
-          Contacts.update(id,{$set : {name : new_name}});
+          Meteor.call("change_name",id,new_name,"change")
         } else {
           console.log('removing contact');
           Meteor.call("remove_contact", id);
@@ -235,9 +235,11 @@ Template.contact_item.events({
           old_street = this.street,
           new_street = evt.target.value.trim();
       if (old_street !== new_street) {
-        Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
+        //Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
+        Meteor.call("change_address",id, old_street, 'remove');
         if (new_street !== "") {
-          Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
+          Meteor.call("change_address",id, new_street, 'add');
+          //Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
         }
         Session.set('address_filter', null);
       }
@@ -247,9 +249,11 @@ Template.contact_item.events({
           old_number = this.number,
           new_number = evt.target.value.trim();
       if (old_number !== new_number) {
-        Contacts.update(id,{ $pull : {phones : {"number": old_number} } });
+        Meteor.call("change_phone",id, old_number, 'remove');
+        //Contacts.update(id,{ $pull : {phones : {"number": old_number} } });
         if (new_number !== "") {
-          Contacts.update(id,{ $push : {phones : {"number": new_number} } });
+          Meteor.call("change_phone",id, new_number, 'add');
+          //Contacts.update(id,{ $push : {phones : {"number": new_number} } });
         }
         Session.set('phone_filter', null);
       }
@@ -440,14 +444,14 @@ Template.lists_filter.events({
     if (this._id) {
       id = this._id;
     }
-    // make sure blur occurs
-    Meteor.setTimeout(function() {
-      Session.set('selected_list_id', id);
-    },100);
     Session.set('address_filter',  null);
     Session.set('phone_filter',    null);
     Session.set('search_contacts', null);
     $('#search_contacts').val("");
+    // make sure blur occurs
+    Meteor.setTimeout(function() {
+      Session.set('selected_list_id', id);
+    },50);
     Meteor.flush();
   },
   'click .add-list' : function(evt) {
@@ -471,7 +475,7 @@ Template.lists_filter.events({
     var id = this._id,
         old_name = this.list_name,
         new_name = evt.target.value.trim();
-    if (new_name && old_name !== new_name) {
+    if (new_name && id && old_name !== new_name) {
         Lists.update(id, {$set: {"list_name": new_name}});
     }
   },

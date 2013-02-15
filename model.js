@@ -95,6 +95,43 @@ Contacts.allow({
       contact = Contacts.insert(contact_item);
       return contact;
     },
+    change_name: function (id, name, action) {
+      if (id && name && action) {
+        if (action === 'change') {
+          Contacts.update(id,{$set : {name : name}});
+        } else {
+          throw new Meteor.Error(401, "Wrong action was provided");
+        }
+      } else {
+        throw new Meteor.Error(400, "No id or name or action was provided");
+      }
+    },
+    change_address: function (id, street, action) {
+      if (id && street && action) {
+        if (action === 'add') {
+          Contacts.update(id, { $push : { addresses: { street : street } } });
+        } else if (action === 'remove') {
+          Contacts.update(id, { $pull : { addresses: { street : street } } });
+        } else {
+          throw new Meteor.Error(401, "Wrong action was provided");
+        }
+      } else {
+        throw new Meteor.Error(400, "No id or address or action was provided");
+      }
+    },
+    change_phone: function (id, number, action) {
+      if (id && number && action) {
+        if (action === 'add') {
+          Contacts.update(id, { $push : { phones: { number : number } } });
+        } else if (action === 'remove') {
+          Contacts.update(id, { $pull : { phones: { number : number } } });
+        } else {
+          throw new Meteor.Error(401, "Wrong action was provided");
+        }
+      } else {
+        throw new Meteor.Error(400, "No id or number or action was provided");
+      }
+    },
     remove_list: function (list_id) {
       var userId = this.userId,
           list = Lists.findOne(list_id);
