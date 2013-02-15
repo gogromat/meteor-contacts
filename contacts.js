@@ -16,11 +16,11 @@ if (Meteor.isClient) {
   // Name of currently selected phone tag for filtering
   Session.set('phone_filter', null);
 
-
+  // Search by name, address, phone
   Session.set('search_contacts', null);
 
   // Contact view
-  Session.set('contacts_view_type', 'list');
+  Session.set('contacts_view_type', 'grid');
 
 
   // Subscribe to 'lists' collection on startup.
@@ -42,7 +42,7 @@ if (Meteor.isClient) {
 
 
 
-
+  //todo
   Template.contacts_view.contacts = function () {
 
     var me = {};
@@ -70,10 +70,8 @@ if (Meteor.isClient) {
     var search_contacts = Session.get('search_contacts');
     if (search_contacts) {
       var pattern = new RegExp(search_contacts,"i"),
-          contacts = Contacts.find( 
-          {$where : 
-            function() 
-            { 
+          contacts = Contacts.find({$where : 
+            function() { 
               var street_equal = false,
                   number_equal = false;
               _.each(this.addresses, function(address) {      
@@ -81,7 +79,7 @@ if (Meteor.isClient) {
                   street_equal = true;
                 }
               });
-               _.each(this.phones, function(phone) {      
+              _.each(this.phones, function(phone) {      
                 if (pattern.test(phone.number)) {
                   number_equal = true;
                 }
@@ -100,7 +98,7 @@ if (Meteor.isClient) {
 
 
   Template.contacts_view.contacts_view_type = function () {
-    return Session.get('contacts_view_type') === 'list' ? 'contacts_view_type' : '';
+    return Session.get('contacts_view_type') === 'grid' ? 'contacts_view_type' : '';
   };
 
 
@@ -162,7 +160,7 @@ if (Meteor.isClient) {
   };
 
   Template.contact_item.contacts_view_type = function () {
-    return Session.get('contacts_view_type') === 'list' ? 'contacts_view_type' : '';
+    return Session.get('contacts_view_type') === 'list' ? '' : 'contacts_view_type';
   };
 
 
@@ -222,7 +220,11 @@ if (Meteor.isClient) {
             old_name = this.name,
             new_name = evt.target.value;
         if (old_name !== new_name) {
-          Contacts.update(id,{$set : {name : new_name}});
+          if (new_name !== "") {
+            Contacts.update(id,{$set : {name : new_name}});
+          } else {
+            Contacts.remove({_id:id}, 1);
+          }
         }
       },
       'blur .contact-address': function(evt) {
@@ -231,7 +233,9 @@ if (Meteor.isClient) {
             new_street = evt.target.value;
         if (old_street !== new_street) {
           Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
-          Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
+          if (new_street !== "") {
+            Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
+          }
           Session.set('address_filter', null);
         }
       },
@@ -241,7 +245,9 @@ if (Meteor.isClient) {
             new_number = evt.target.value;
         if (old_number !== new_number) {
           Contacts.update(id,{ $pull : {phones : {"number": old_number} } });
-          Contacts.update(id,{ $push : {phones : {"number": new_number} } });
+          if (new_number !== "") {
+            Contacts.update(id,{ $push : {phones : {"number": new_number} } });
+          }
           Session.set('phone_filter', null);
         }
       }
@@ -324,13 +330,18 @@ if (Meteor.isClient) {
     /* BY EVERYTHING */
   Template.search_contacts.events({
     'keyup #search_contacts': function(evt) {
+      Session.set('address_filter',null);
+      Session.set('phone_filter',  null);
       var value = evt.target.value.trim();
-      console.log("Search Contacts:",value);
       if (Session.equals('search_contacts', value)) {
         Session.set('search_contacts', null);
       } else {
         Session.set('search_contacts', value);
       }
+    },
+    'click #delete-search-contacts' : function() {
+      $('#search_contacts').val(" ");
+      Session.set('search_contacts', null);
     }
   });
 
@@ -368,7 +379,7 @@ if (Meteor.isClient) {
     //sorts by how many times same address repeats (not best, but ok)
     phones = _.sortBy(phones, function(phone) { return phone.number; });
     //also add one empty
-    phones.unshift({phone: null, count: contact_count});
+    phones.unshift({number: null, count: contact_count});
     return phones;
   }
  
@@ -427,8 +438,10 @@ if (Meteor.isClient) {
         id = this._id;
       }
       Session.set('selected_list_id', id);
-      Session.set('address_filter', null);
-      Session.set('phone_filter', null);
+      Session.set('address_filter',   null);
+      Session.set('phone_filter',     null);
+      Session.set('search_contacts',  null);
+      $('#search_contacts').val("");
       Meteor.flush();
     },
     'click  .add-list' : function(evt) {

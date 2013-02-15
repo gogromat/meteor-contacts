@@ -5,21 +5,12 @@
 <body>
 
 	{{>header}}
-	
-	{{>pre_view}}
-	
+		
 	{{>contacts_view}}
 	
 	{{>footer}}
 
 </body>
-
-<template name="pre_view">
-	<div style="width:100%;text-align:center;">
-		<!-- {>address_filter} -->
-	</div>
-</template>
-
 
 
 <template name="contacts_view">
@@ -40,12 +31,12 @@
 				</td>
 				<td>
 					<div class="toolbar">
-						<button class="contact_list_view {{#if contacts_view_type}}bg-color-greenLight{{/if}}">
-							<i class="icon-list"></i>
-						</button>	
-						<button class="contact_grid_view {{#unless contacts_view_type}}bg-color-greenLight{{/unless}}">
+						<button class="contact_grid_view {{#if contacts_view_type}}bg-color-greenLight{{/if}}">
 							<i class="icon-grid"></i>
 						</button>
+						<button class="contact_list_view {{#unless contacts_view_type}}bg-color-greenLight{{/unless}}">
+							<i class="icon-list"></i>
+						</button>	
 					</div>
 				</td>
 			</tr>
@@ -62,7 +53,7 @@
 					<h4>Address filter</h4>
 					{{>address_filter}}
 					<hr>
-					<h4>Phones filter</h4>
+					<h4>Phone filter</h4>
 					{{>phone_filter}}
 				</td>
 				<td colspan="2">
@@ -96,7 +87,6 @@
 	{{/each}}
 </template>
 
-
 <template name="address_filter">
 	<!-- <div class="address_tag_title">Addresses</div> -->
 	<!-- <h3>Addresses</h3> -->
@@ -125,7 +115,6 @@
 	</div>
 </template>
 
-
 <template name="phone_filter">
 	<div class="button-set" data-role="button-set" style="padding: 10px;">
 		{{#each phones}}
@@ -146,16 +135,16 @@
 
 <template name="search_contacts">
 	<div class="input-control text">
-		<input type="text" class="with-helper" id="search_contacts" placeholder="Type to search contacts"/>
-		<button class="btn-search"></button>
+		<input type="text" class="with-helper" id="search_contacts" placeholder="Search contacts"/>
+		<button class="helper" id="delete-search-contacts"></button>
 	</div>
 </template>
 
 <template name="contact_item">
-		{{#if contacts_view_type}}<div class="contact-div-full"><hr></div>{{/if}}
+		{{#unless contacts_view_type}}<div class="contact-div-full"><hr></div>{{/unless}}
 		<div class="bg-color-blueLight 
 					padding10 
-					{{#if contacts_view_type}}contact-div-full{{else}}contact-div{{/if}}">
+					{{#if contacts_view_type}}contact-div{{else}}contact-div-full{{/if}}">
 			<div class="input-control text">
 				<input type="text" value="{{name}}" class="with-helper contact-name" />
 				<button class="helper remove-contact" tabindex="-1" type="button"></button>
@@ -191,21 +180,17 @@
 
 <template name="add_contact">
 	<div class="contact-div-full bg-color-blueLight">
-		Name
 		<div class="input-control text" id="new_contact">
-			<input type="text" id="new_contact_name" placeholder="Name" />
+			<i class="icon-user"></i>
+			<input type="text" id="new_contact_name" placeholder="Name" class="new-input"/>
+			<i class="icon-home"></i>
+			<input type="text" id="new_contact_address" placeholder="Address" class="new-input"/>
+			<i class="icon-phone"></i>
+			<input type="text" id="new_contact_phone" placeholder="Phone" class="new-input"/>
+			<button id="add_new_contact" class="btn bg-color-greenLight small top-margin-9">Add Contact</button>
 		</div>
-		Address
-		<div class="input-control text">
-			<input type="text" id="new_contact_address" placeholder="Address" />
-		</div>
-		Phone
-		<div class="input-control text">
-			<input type="text" id="new_contact_phone" placeholder="xxx-xxx-xxxx" />
-		</div>
-		<div class="bottom right">
-			<button id="add_new_contact" class="btn bg-color-greenLight small right-bottom">New Contact</button>
-		</div>
+		<!-- <div class="bottom right"> -->
+		<!-- </div> -->
 	</div>
 </template>
 
@@ -258,7 +243,7 @@
 
 <template name="footer">
 	<div class="page bg-color-blueLight padding10">
-		<span class="element">Meteor Contacts<!--©-->, 2013, designed by 
+		<span class="element">Meteor Contacts<!--©-->, 2013, developed by 
 			<a target="_blank" href="http://github.com/gogromat">
 				<i class="icon-github-2"></i> GogromaT
 			</a>

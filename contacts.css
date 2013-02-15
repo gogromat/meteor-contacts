@@ -92,3 +92,18 @@ table, td, th {
 .clear {
     clear: both;
 }
+
+.new-input {
+    margin-right: 0 !important;
+    width:    23% !important;
+}
+
+@media all and (max-width: 850px) {
+    .new-input {
+        width: 100% !important;
+    }
+}
+
+.top-margin-9 {
+    margin-top: 9px;
+}
