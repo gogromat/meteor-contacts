@@ -107,3 +107,7 @@ table, td, th {
 .bottom-margin-10 {
     margin-bottom: 10px;
 }
+
+#new_contact {
+    margin-bottom: 0px !important;
+}
