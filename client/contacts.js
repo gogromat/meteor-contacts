@@ -102,7 +102,6 @@ Template.contacts_view.contacts_view_type = function () {
 
 Template.contacts_view.events({
     'click #add_new_contact': function() {
-      console.log('adding new contact...');
       var new_contact = $("#new_contact_name"), 
           name        = new_contact.val(),
           new_address = $("#new_contact_address"),
@@ -124,6 +123,7 @@ Template.contacts_view.events({
         new_contact_item.phones = [{number: phone}];
       }
 
+      console.log('calling to add new contact...');
       Meteor.call("add_contact", new_contact_item);
       //Contacts.insert(new_contact_item);
 
@@ -440,14 +440,17 @@ Template.lists_filter.events({
     if (this._id) {
       id = this._id;
     }
-    Session.set('selected_list_id', id);
-    Session.set('address_filter',   null);
-    Session.set('phone_filter',     null);
-    Session.set('search_contacts',  null);
+    // make sure blur occurs
+    Meteor.setTimeout(function() {
+      Session.set('selected_list_id', id);
+    },100);
+    Session.set('address_filter',  null);
+    Session.set('phone_filter',    null);
+    Session.set('search_contacts', null);
     $('#search_contacts').val("");
     Meteor.flush();
   },
-  'click  .add-list' : function(evt) {
+  'click .add-list' : function(evt) {
     var new_list = $('#new_list_name'),
         new_list_name = new_list.val().trim();
 
@@ -463,12 +466,19 @@ Template.lists_filter.events({
       new_list.val("");
     }
   },
+  'blur .list-selected' : function (evt) {
+    console.log("CALLED",evt.target.value,this.list_name);
+    if (evt.target.value !== this.list_name) {
+      
+    }
+  },
   'click .remove-list' : function(evt) {
     console.log('removing list...');
     list_id = this._id;
     Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
       if (_.size(contact.lists) > 1) {
         // Contact on multiple lists
+        //todo: fix
         Contacts.remove({"lists":{"list_id": list_id}});
       } else {
         // Contact on this list only
