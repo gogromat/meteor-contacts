@@ -37,10 +37,18 @@ Meteor.autosubscribe(function () {
   }
 });
 
+
 /*
   TODO: autorun to contacts changed by session's list 
   TODO: remove update from lists/contacts
  */
+
+  Template.not_logged_in.logged_in = function () {
+    if (Meteor.userId()) {
+      return true;
+    } 
+    return false;
+  }
 
 
 Template.contacts_view.contacts = function () {
@@ -179,7 +187,7 @@ Template.contact_item.events({
       }
       new_address.val("");
     },
-    'click .remove-address': function(evt) {
+    'click .remove-address': function() {
       var id  = this.contact_id,
           street = this.street;
       Meteor.call("change_address",id,street,'remove');
@@ -197,7 +205,7 @@ Template.contact_item.events({
       }
       new_phone.val("");
     },
-    'click .remove-phone': function(evt) {
+    'click .remove-phone': function() {
       var id     = this.contact_id,
           number = this.number;
       Meteor.call("change_phone", id, number, 'remove');
@@ -288,7 +296,7 @@ Template.address_filter.addresses = function() {
 
 
 Template.address_filter.events({
-  'mousedown .address-filter': function(evt) {
+  'mousedown .address-filter': function() {
     if (Session.equals('address_filter', this.street)) {
       Session.set('address_filter', null);
     } else {
@@ -358,7 +366,7 @@ Template.phone_filter.phones = function() {
 
 
 Template.phone_filter.events({
-  'mousedown .phone-filter': function(evt) {
+  'mousedown .phone-filter': function() {
     if (Session.equals('phone_filter', this.number)) {
       Session.set('phone_filter', null);
     } else {
@@ -401,7 +409,7 @@ Template.lists_filter.selected = function () {
 
 
 Template.lists_filter.events({
-  'mousedown .lists-filter' : function(evt, tmpl) {
+  'mousedown .lists-filter' : function() {//evt, tmpl
     var id = null;
     if (this._id) {
       id = this._id;
@@ -416,9 +424,11 @@ Template.lists_filter.events({
     },50);
     Meteor.flush();
   },
-  'click .add-list' : function(evt) {
+  'click .add-list, blur #new_list_name' : function() {
     var new_list = $('#new_list_name'),
         new_list_name = new_list.val().trim();
+
+    console.log("blurring...", new_list_name);
 
     if (new_list_name !== "") {
       var new_list_id = 0;
@@ -439,7 +449,7 @@ Template.lists_filter.events({
         Meteor.call("change_list_name", id, new_name);
     }
   },
-  'click .remove-list' : function(evt) {
+  'click .remove-list' : function() {
     var list_id = this._id;
     Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
       if (_.size(contact.lists) > 1) {

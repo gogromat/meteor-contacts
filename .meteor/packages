@@ -6,6 +6,10 @@
 preserve-inputs
 less
 router
-metrouicss
 accounts-password
 accounts-ui
+accounts-facebook
+metrouicss
+accounts-google
+accounts-twitter
+accounts-github

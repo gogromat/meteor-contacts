@@ -1,9 +1,9 @@
 {
   "packages": {
     "router": {},
-    "foundation-custom": {},
-  	"metrouicss" : {
-  		"path": "/home/gogromat/Projects/meteor/metroui"
-  	}
+    "metrouicss": {
+      "git": "https://github.com/gogromat/meteor-metro-ui"
+    },
+    "bootstrap-jasny": {}
   }
 }

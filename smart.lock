@@ -7,10 +7,11 @@
   "dependencies": {
     "basePackages": {
       "router": {},
-      "foundation-custom": {},
       "metrouicss": {
-        "path": "../metroui"
-      }
+        "git": "https://github.com/gogromat/meteor-metro-ui",
+        "branch": "master"
+      },
+      "bootstrap-jasny": {}
     },
     "packages": {
       "router": {
@@ -18,13 +19,15 @@
         "tag": "v0.3.5",
         "commit": "e8e63db2411204f0a6589b74dd591babbfb2da1a"
       },
-      "foundation-custom": {
-        "git": "https://github.com/digioak/meteor-foundation-custom.git",
-        "tag": "v0.0.7",
-        "commit": "78a2f2def62709836c58dcca894ea6f3702d940c"
-      },
       "metrouicss": {
-        "path": "../metroui"
+        "git": "https://github.com/gogromat/meteor-metro-ui",
+        "branch": "master",
+        "commit": "432860979a5872605777be7c874356fa930ea860"
+      },
+      "bootstrap-jasny": {
+        "git": "https://github.com/limeyd/meteor-bootstrap-jasny.git",
+        "tag": "v1.0.1",
+        "commit": "429bd66901e1af4d0a82437b0d0827224e0b37e7"
       },
       "page-js": {
         "git": "https://github.com/tmeasday/meteor-page-js.git",
