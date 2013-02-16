@@ -37,10 +37,12 @@ Meteor.autosubscribe(function () {
   }
 });
 
+/*
+  TODO: autorun to contacts changed by session's list 
+  TODO: remove update from lists/contacts
+ */
 
 
-
-//todo
 Template.contacts_view.contacts = function () {
 
   var me = {};
@@ -89,9 +91,7 @@ Template.contacts_view.contacts = function () {
     var contacts = Contacts.find(me, {sort: {name: 1}}); 
   }
 
-
-  //console.log(me,contacts.collection.docs);
-  return contacts;//Contacts.find();
+  return contacts;
 };
 
 
@@ -123,9 +123,7 @@ Template.contacts_view.events({
         new_contact_item.phones = [{number: phone}];
       }
 
-      console.log('calling to add new contact...');
       Meteor.call("add_contact", new_contact_item);
-      //Contacts.insert(new_contact_item);
 
       Session.set('address_filter', null);
       Session.set('phone_filter', null);
@@ -166,55 +164,43 @@ Template.contact_item.contacts_view_type = function () {
 
 Template.contact_item.events({
     'click .remove-contact': function() {
-      console.log('removing contact');
       Meteor.call("remove_contact",this._id);
-      //Contacts.remove(this._id);
     },
-    'click .add_another_address': function() {
-      console.log('add another address');
+    'click .add_another_address, blur .add_another_address_input': function() {
       var id = this._id,
           new_address = $("#" + this._id + '_add_address'),
           new_street  = new_address.val().trim();
       if (new_street === "") {
         return false;
       }
-      // street already exists?
       var isAddressSet = Contacts.findOne({_id: id, "addresses": {"street":new_street}});
       if (!isAddressSet) {
-        //Contacts.update(id, { $push : { addresses: { street : new_street } } });
         Meteor.call("change_address",id,new_street,'add');
       }
       new_address.val("");
     },
     'click .remove-address': function(evt) {
-      console.log('removing address...');
       var id  = this.contact_id,
           street = this.street;
-      //Contacts.update(id, {$pull: {addresses : {"street" : street} } });
       Meteor.call("change_address",id,street,'remove');
     },
-    'click .add_another_phone': function () {
-      console.log('add another phone');
+    'click .add_another_phone, blur .add_another_phone_input': function () {
       var id = this._id,
           new_phone  = $("#" + this._id + '_add_phone'),
           new_number = new_phone.val().trim();
       if (new_number === "") {
         return false;
       }
-      // street already exists?
       var isPhoneSet = Contacts.findOne({_id: id, "phones": {"number":new_number}});
       if (!isPhoneSet) {
         Meteor.call("change_phone", id, new_number,'add');
-        //Contacts.update(id, { $push : { phones: { number : new_number } } });
       }
       new_phone.val("");
     },
     'click .remove-phone': function(evt) {
-      console.log('removing phone...');
       var id     = this.contact_id,
           number = this.number;
       Meteor.call("change_phone", id, number, 'remove');
-      //Contacts.update({_id:id}, {$pull: {phones : {"number" : number} } });
     },
     'blur .contact-name': function(evt) {
       var id  = this._id,
@@ -224,9 +210,7 @@ Template.contact_item.events({
         if (new_name !== "") {
           Meteor.call("change_name",id,new_name,"change")
         } else {
-          console.log('removing contact');
           Meteor.call("remove_contact", id);
-          //Contacts.remove({_id:id}, 1);
         }
       }
     },
@@ -235,11 +219,9 @@ Template.contact_item.events({
           old_street = this.street,
           new_street = evt.target.value.trim();
       if (old_street !== new_street) {
-        //Contacts.update(id,{ $pull : {addresses : {"street": old_street} } });
         Meteor.call("change_address",id, old_street, 'remove');
         if (new_street !== "") {
           Meteor.call("change_address",id, new_street, 'add');
-          //Contacts.update(id,{ $push : {addresses : {"street": new_street} } });
         }
         Session.set('address_filter', null);
       }
@@ -250,10 +232,8 @@ Template.contact_item.events({
           new_number = evt.target.value.trim();
       if (old_number !== new_number) {
         Meteor.call("change_phone",id, old_number, 'remove');
-        //Contacts.update(id,{ $pull : {phones : {"number": old_number} } });
         if (new_number !== "") {
           Meteor.call("change_phone",id, new_number, 'add');
-          //Contacts.update(id,{ $push : {phones : {"number": new_number} } });
         }
         Session.set('phone_filter', null);
       }
@@ -271,14 +251,7 @@ Template.contact_item.events({
 
 
 
-
-
-
 /* FILTERS */
-
-
-
-
 
 
     /* BY ADDRESS */
@@ -292,11 +265,8 @@ Template.address_filter.addresses = function() {
   } else {
     contacts = Contacts.find({"lists":{"list_id": Session.get('selected_list_id')}});
   }
-  //console.log("All contacts are:",contacts);
 
-  // iterate mongo.db contacts
   contacts.forEach(function(contact) {
-    // iterate contacts' addresses
     _.each(contact.addresses, function(contact_address) {
       // find if we inserted street object already into 'addresses'
       var old_street = _.find(addresses, function (address) { return address.street === contact_address.street;});
@@ -316,7 +286,6 @@ Template.address_filter.addresses = function() {
   return addresses;
 }
 
-// Template.address_filter.streets = function () {return this.street || "All addresses";};
 
 Template.address_filter.events({
   'mousedown .address-filter': function(evt) {
@@ -366,11 +335,8 @@ Template.phone_filter.phones = function() {
   } else {
     contacts = Contacts.find({"lists":{"list_id": Session.get('selected_list_id')}});
   }
-  //console.log("All contacts are:",contacts);
 
-  // iterate mongo.db contacts
   contacts.forEach(function(contact) {
-    // iterate contacts' addresses
     _.each(contact.phones, function(contact_phone) {
       // find if we inserted street object already into 'addresses'
       var old_phone = _.find(phones, function (phone) { return phone.number === contact_phone.number;});
@@ -390,7 +356,6 @@ Template.phone_filter.phones = function() {
   return phones;
 }
 
-// Template.phone_filter.numbers = function () {return this.number || "";};
 
 Template.phone_filter.events({
   'mousedown .phone-filter': function(evt) {
@@ -405,9 +370,6 @@ Template.phone_filter.events({
 Template.phone_filter.selected = function() {
   return Session.equals("phone_filter", this.number) ? 'bg-color-greenLight ' : '';
 }
-
-
-
 
 
 
@@ -461,7 +423,6 @@ Template.lists_filter.events({
     if (new_list_name !== "") {
       var new_list_id = 0;
       Meteor.setTimeout(function () {
-        //new_list_id = Lists.insert({"list_name": new_list_name});
         new_list_id = Meteor.call("add_list", new_list_name);
         Meteor.setTimeout(function () {
           Session.set("selected_list_id", new_list_id);
@@ -471,35 +432,23 @@ Template.lists_filter.events({
     }
   },
   'blur .list-selected' : function (evt) {
-    console.log('changing list name');
     var id = this._id,
         old_name = this.list_name,
         new_name = evt.target.value.trim();
     if (new_name && id && old_name !== new_name) {
-        Lists.update(id, {$set: {"list_name": new_name}});
-
+        Meteor.call("change_list_name", id, new_name);
     }
   },
   'click .remove-list' : function(evt) {
-    console.log('removing list...');
     var list_id = this._id;
     Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
       if (_.size(contact.lists) > 1) {
         // Contact on multiple lists
-        //todo: fix
-        Contacts.remove({"lists":{"list_id": list_id}});
+        Meteor.call("remove_list_from_contacts",list_id);
       } else {
-        // Contact on this list only
-        console.log("removing 1 contact in list...");
         Meteor.call("remove_contact",contact._id);
-        //Contacts.remove({_id:contact._id}, 1);
       }
     });
-    // Delete from Lists
-    //list = Lists.find({_id: list_id});
-
-    console.log("removing list...");
     Meteor.call("remove_list", list_id);
-    //Lists.remove({_id: list_id});
   }
 });

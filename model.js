@@ -8,37 +8,37 @@ Lists.allow({
     return false;
   },
   update: function (userId, lists, fields, modifiers) {
-    return _.all(lists, function(list) {
+    //return _.all(lists, function(list) {
       // the same owner
-      console.log("UPDATING LIST!");
-      if (list.owner === userId) {
-        return true;
-      }         
-    });
+    //  if (list.owner === userId) {
+    //    return true;
+    //  }         
+    //});
+    return false;
   },
   remove: function (userId, lists) {
-    return _.all(lists, function(list) {
+    //return _.all(lists, function(list) {
       // the same owner
-      if (list.owner === userId) {
-        return true;
-      }
-    });
+      //if (list.owner === userId) {
+      //  return true;
+      //}
+    //});
+    return false;
   }
 });
 
 Contacts.allow({
   insert: function () {
-    return true;
+    return false;
   },
   update: function (userId, contacts, fields, modifiers) {
-    return _.all(contacts, function(contact) {
-      console.log("CONTACT:",contact);
+    //return _.all(contacts, function(contact) {
       // the same owner
-      if (contact.owner === userId || !(contact.owner)) {
-        return true;
-      }
+      //if (contact.owner === userId || !(contact.owner)) {
+      //  return true;
+      //}
       return false;         
-    });
+    //});
   },
   remove: function (userId, contacts) {
     return false;
@@ -59,17 +59,12 @@ Contacts.allow({
       } else if (!userId) {
         throw new Meteor.Error(403, "You must be logged in");
       }
-      console.log("Trying to insert new list...",name);
-
       inserted =  Lists.insert({
         owner: userId,
         list_name: name 
       }); 
 
-
       user_lists = Lists.find({owner: userId}).fetch();
-
-      console.log(user_lists, inserted);
 
       return inserted;
     },
@@ -91,7 +86,6 @@ Contacts.allow({
         throw new Meteor.Error(403, "Wrong User");
       }
 
-      console.log("Trying to insert new contact...",contact_item);
       contact = Contacts.insert(contact_item);
       return contact;
     },
@@ -132,6 +126,15 @@ Contacts.allow({
         throw new Meteor.Error(400, "No id or number or action was provided");
       }
     },
+    change_list_name: function(list_id, new_name) {
+      if (!list_id || !new_name) {
+        throw new Meteor.Error(400, "Wrong list provided");
+      }
+      var old_name = Lists.findOne(list_id).list_name;
+      if (old_name !== new_name) {
+        Lists.update(list_id, {$set: {"list_name": new_name}});  
+      }
+    },
     remove_list: function (list_id) {
       var userId = this.userId,
           list = Lists.findOne(list_id);
@@ -152,7 +155,6 @@ Contacts.allow({
 
       //todo: throw error
       if (!(_.all(contact_item.lists, function (contact_list) {
-            console.log("LIST:",contact_list);
             var lists = [];
             if (contact_list) {
               lists = Lists.find({_id: contact_list.list_id}).fetch();
@@ -168,8 +170,14 @@ Contacts.allow({
           })) ) {
         throw new Meteor.Error(403, "Wrong User");
       }
-      console.log("Trying to remove contact...", contact_id);
       Contacts.remove({_id:contact_id});
+    },
+    remove_list_from_contacts: function (list_id) {
+      if (!list_id) {
+        throw new Meteor.Error(400, "Wrong List provided");
+      }
+
+      Contacts.remove({"lists":{"list_id": list_id}});
     }
   });
 

@@ -52,12 +52,12 @@
 					{{>search_contacts}}
 					<hr>
 					<h4>Address filter</h4>
-					<div style="max-height:300px;overflow-y:auto;">
+					<div class="filter_div">
 						{{>address_filter}}
 					</div>
 					<hr>
 					<h4>Phone filter</h4>
-					<div style="max-height:300px;overflow-y:auto;">
+					<div class="filter_div">
 						{{>phone_filter}}
 					</div>
 				</td>
@@ -93,20 +93,10 @@
 </template>
 
 <template name="address_filter">
-	<!-- <div class="address_tag_title">Addresses</div> -->
-	<!-- <h3>Addresses</h3> -->
-	
-		<!-- 
-			<div class="inline address-filter">
-				<div class="fixed-200 address-tag {selected}">{streets}</div>
-				<span class="count">x {count}</span>
-			</div>
-			<div class="clear-inline"></div> 
-		-->
-	<div class="button-set" data-role="button-set" style="padding: 10px;">
+
+	<div class="button-set padding10" data-role="button-set">
 		{{#each addresses}}
-			<button class="shortcut address-filter {{selected}}" style="height:50px;width:100%;">
-		        <!-- <span class="icon"><i class="icon-*"></i></span> -->
+			<button class="shortcut address-filter {{selected}} filter-botton">
 		        <span class="label">
 		        	{{#if street}}
 		            	{{street}}
@@ -121,9 +111,9 @@
 </template>
 
 <template name="phone_filter">
-	<div class="button-set" data-role="button-set" style="padding: 10px;">
+	<div class="button-set padding10" data-role="button-set">
 		{{#each phones}}
-			<button class="shortcut phone-filter {{selected}}" style="height:50px;width:100%;">
+			<button class="shortcut phone-filter {{selected}} filter-botton">
 		        <!-- <span class="icon"></span> -->
 		        <span class="label">
 		        	{{#if number}}
@@ -163,7 +153,7 @@
 			{{/each}}	
 	
 			<div class="input-control text">
-				<input type="text" id="{{_id}}_add_address" class="with-helper" placeholder="Another Address">
+				<input type="text" id="{{_id}}_add_address" class="with-helper add_another_address_input" placeholder="Another Address">
 				<button class="helper helper-plus-2 add_another_address plus" type="button"></button>
 			</div>
 
@@ -176,7 +166,7 @@
 			{{/each}}
 
 			<div class="input-control text">
-				<input type="text" id="{{_id}}_add_phone" class="with-helper" placeholder="Another Phone">
+				<input type="text" id="{{_id}}_add_phone" class="with-helper add_another_phone_input" placeholder="Another Phone">
 				<button class="helper helper-plus-2 add_another_phone plus" type="button"></button>
 			</div>
 
@@ -200,8 +190,6 @@
 			</div>
 			<button id="add_new_contact" class="btn bg-color-greenLight small top-margin-9">Add Contact</button>
 		</div>
-		<!-- <div class="bottom right"> -->
-		<!-- </div> -->
 	</div>
 </template>
 
@@ -241,15 +229,13 @@
 		    						Contact Us
 		    					</a>
 		    				</li>
-		    				<!-- <li class="divider"></li> -->
-		    				<!-- <li><a href="#">...</a></li> -->
 		    			</ul>
 		    		</li>
 		    	</ul>
 
 
-		    	<div style="float:right;">
-		    		<i class="icon-user" style="float:left;"></i>
+		    	<div id="login-div">
+		    		<i class="icon-user" id="login_icon"></i>
 		    		<span class="element fg-color-darken">
 		    			{{loginButtons align="right"}}
 		    		</span>

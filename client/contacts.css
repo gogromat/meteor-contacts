@@ -6,8 +6,6 @@
     font-size: 15px !important;
 }
 
-
-
 .bg-color-maroonLight {
   background-color: #CAB3BA !important;
 }
@@ -80,6 +78,9 @@ table, td, th {
     display: inline;
 }
 
+.padding10 {
+    padding: 10px;
+}
 
 .helper-plus-2:before {
     content: "\e08c" !important;
@@ -101,7 +102,24 @@ table, td, th {
     margin-bottom: 0px !important;
 }
 
+#login-div {
+    float:right;
+}
 
+#login_icon {
+    float:left;
+    margin-top:  5px;
+}
+
+.filter_div {
+    max-height:300px;
+    overflow-y:auto;
+}
+
+.filter-botton {
+    height:50px;
+    width:100%;
+}
 
 /* MEDIA QUERIES (INCREASING) */
 @media all and (max-width: 420px) {
