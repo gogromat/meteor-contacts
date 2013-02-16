@@ -8,21 +8,9 @@ Lists.allow({
     return false;
   },
   update: function (userId, lists, fields, modifiers) {
-    //return _.all(lists, function(list) {
-      // the same owner
-    //  if (list.owner === userId) {
-    //    return true;
-    //  }         
-    //});
     return false;
   },
   remove: function (userId, lists) {
-    //return _.all(lists, function(list) {
-      // the same owner
-      //if (list.owner === userId) {
-      //  return true;
-      //}
-    //});
     return false;
   }
 });
@@ -32,18 +20,13 @@ Contacts.allow({
     return false;
   },
   update: function (userId, contacts, fields, modifiers) {
-    //return _.all(contacts, function(contact) {
-      // the same owner
-      //if (contact.owner === userId || !(contact.owner)) {
-      //  return true;
-      //}
-      return false;         
-    //});
+    return false;         
   },
   remove: function (userId, contacts) {
     return false;
   }
 });
+
 
 
 
@@ -72,9 +55,9 @@ Contacts.allow({
       var userId = this.userId;
 
       if (!contact_item) {
-        throw new Meteor.Error(400, "No contact was provided");
+        throw new Meteor.Error(401, "Required item missing (contact)");
       } else if (!contact_item.name) {
-        throw new Meteor.Error(401, "No contact name was provided");
+        throw new Meteor.Error(400, "Required parameters missing (name)");
       }
 
       //todo: throw error
@@ -83,7 +66,7 @@ Contacts.allow({
                       if (element.owner === userId) { return true; } }));
           }))
         ) {
-        throw new Meteor.Error(403, "Wrong User");
+        throw new Meteor.Error(404, "Wrong User");
       }
 
       contact = Contacts.insert(contact_item);
@@ -94,10 +77,10 @@ Contacts.allow({
         if (action === 'change') {
           Contacts.update(id,{$set : {name : name}});
         } else {
-          throw new Meteor.Error(401, "Wrong action was provided");
+          throw new Meteor.Error(405, "Wrong Action");
         }
       } else {
-        throw new Meteor.Error(400, "No id or name or action was provided");
+        throw new Meteor.Error(400, "Required parameters missing (id, name, action)");
       }
     },
     change_address: function (id, street, action) {
@@ -107,10 +90,10 @@ Contacts.allow({
         } else if (action === 'remove') {
           Contacts.update(id, { $pull : { addresses: { street : street } } });
         } else {
-          throw new Meteor.Error(401, "Wrong action was provided");
+          throw new Meteor.Error(405, "Wrong Action");
         }
       } else {
-        throw new Meteor.Error(400, "No id or address or action was provided");
+        throw new Meteor.Error(400, "Required parameters missing");
       }
     },
     change_phone: function (id, number, action) {
@@ -120,15 +103,15 @@ Contacts.allow({
         } else if (action === 'remove') {
           Contacts.update(id, { $pull : { phones: { number : number } } });
         } else {
-          throw new Meteor.Error(401, "Wrong action was provided");
+          throw new Meteor.Error(405, "Wrong Action");
         }
       } else {
-        throw new Meteor.Error(400, "No id or number or action was provided");
+        throw new Meteor.Error(400, "Required parameters missing (id, number, action)");
       }
     },
     change_list_name: function(list_id, new_name) {
       if (!list_id || !new_name) {
-        throw new Meteor.Error(400, "Wrong list provided");
+        throw new Meteor.Error(403, "Wrong List");
       }
       var old_name = Lists.findOne(list_id).list_name;
       if (old_name !== new_name) {
@@ -140,7 +123,7 @@ Contacts.allow({
           list = Lists.findOne(list_id);
 
       if (!list_id || !list) {
-        throw new Meteor.Error(400, "No list was selected");
+        throw new Meteor.Error(400, "Required parameters missing (list_id, list)");
       }
 
       Lists.remove({_id:list_id});
@@ -150,7 +133,7 @@ Contacts.allow({
           contact_item = Contacts.findOne(contact_id);
 
       if (!contact_id || !contact_item) {
-        throw new Meteor.Error(400, "No contact was selected");
+        throw new Meteor.Error(400, "Required parameters missing (contact_id, contact)");
       }
 
       //todo: throw error
@@ -174,7 +157,7 @@ Contacts.allow({
     },
     remove_list_from_contacts: function (list_id) {
       if (!list_id) {
-        throw new Meteor.Error(400, "Wrong List provided");
+        throw new Meteor.Error(403, "Wrong List");
       }
 
       Contacts.remove({"lists":{"list_id": list_id}});
