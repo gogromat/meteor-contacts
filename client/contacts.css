@@ -89,17 +89,6 @@ table, td, th {
     clear: both;
 }
 
-.new-input {
-    margin-right: 0 !important;
-    width:    23% !important;
-}
-
-@media all and (max-width: 850px) {
-    .new-input {
-        width: 100% !important;
-    }
-}
-
 .top-margin-9 {
     margin-top: 9px;
 }
@@ -110,4 +99,60 @@ table, td, th {
 
 #new_contact {
     margin-bottom: 0px !important;
+}
+
+
+
+/* MEDIA QUERIES (INCREASING) */
+@media all and (max-width: 420px) {
+    .icon-input-inline {
+        margin-top:    8px;
+        margin-bottom: 8px;
+        display: block !important;
+    }   
+    .new-input {
+        width: 100% !important;
+    }
+    .inline-icon {
+        display: none !important;
+    }
+    #new_contact {
+        display: block !important;
+        width:   100%  !important;
+    }
+}
+@media all and (max-width: 900px) {
+    .icon-input-inline {
+        margin-top:    8px;
+        margin-bottom: 8px;
+        display: block !important;
+    }   
+    .new-input {
+        width: 92% !important;
+    }
+    #new_contact {
+        display: block !important;
+        width:   100%  !important;
+    }
+}
+
+@media all and (max-width: 980px) {
+    .icon-input-inline {
+        margin-top:    8px;
+        margin-bottom: 8px;
+        display: block !important;
+    }
+}
+
+#new_contact {
+    display: table;
+    width:   100%  !important;
+}
+
+.icon-input-inline {
+    display: table-cell;
+}
+.new-input {
+    margin-right: 0 !important;
+    width: 88%;
 }

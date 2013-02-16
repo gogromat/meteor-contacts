@@ -426,7 +426,7 @@ Template.lists_filter.lists = function() {
 }
 
 Template.lists_filter.list_name = function () {
-  return this.list_name || "All Contacts";
+  return this.list_name || (!Meteor.userId() ? "Public Contacts" : "All My Contacts");
 };
 
 Template.lists_filter.selected = function () {
@@ -477,6 +477,7 @@ Template.lists_filter.events({
         new_name = evt.target.value.trim();
     if (new_name && id && old_name !== new_name) {
         Lists.update(id, {$set: {"list_name": new_name}});
+
     }
   },
   'click .remove-list' : function(evt) {

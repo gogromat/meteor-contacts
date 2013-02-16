@@ -3,10 +3,8 @@ Meteor.publish("users", function () {
   return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
 });
 
-
 Meteor.publish("lists", function () {
 	return getLists(this.userId);
-//Lists.find({});
 });
 
 // todo: return only those contacts, 
@@ -16,10 +14,6 @@ Meteor.publish("contacts", function () {
   	  //account for Public List
   	  list_ids.push(null);
   
-  //var contact_lists = _.map(list_ids,function(id) {
-  //	return {list_id: id};
-  //});
-
   contacts = Contacts.find({"lists.list_id": {$in: list_ids}});
 
   return contacts;
@@ -27,5 +21,6 @@ Meteor.publish("contacts", function () {
 
 
 function getLists(userId) {
-  return Lists.find({$or: [{owner: userId}, {owner: null}]});
+  var owner = {owner: userId} || {owner: null};
+  return Lists.find(owner);
 }
