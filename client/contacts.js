@@ -129,35 +129,37 @@ Template.contacts_view.contacts_view_type = function () {
 
 
 Template.contacts_view.events({
-    'click #add_new_contact': function() {
-      var new_contact = $("#new_contact_name"), 
-          name        = new_contact.val(),
-          new_address = $("#new_contact_address"),
-          address     = new_address.val().trim(),
-          new_phone   = $("#new_contact_phone"),
-          phone       = new_phone.val().trim(),
-          new_contact_item = {};
+    'click #add_new_contact, keydown #new_contact_name, keydown #new_contact_address, keydown #new_contact_phone': function(evt) {
+      if (evt.which === undefined || evt.which === 13) {        
+        var new_contact = $("#new_contact_name"), 
+            name        = new_contact.val(),
+            new_address = $("#new_contact_address"),
+            address     = new_address.val().trim(),
+            new_phone   = $("#new_contact_phone"),
+            phone       = new_phone.val().trim(),
+            new_contact_item = {};
 
-      if (name === "") {
-        return false;
-      } else {
-        new_contact_item.name = name;
-        new_contact_item.lists = [{list_id : Session.get('selected_list_id')}];
-      }
-      if (address !== "") {
-        new_contact_item.addresses = [{street: address}];
-      }
-      if (phone !== "") {
-        new_contact_item.phones = [{number: phone}];
-      }
+        if (name === "") {
+          return false;
+        } else {
+          new_contact_item.name = name;
+          new_contact_item.lists = [{list_id : Session.get('selected_list_id')}];
+        }
+        if (address !== "") {
+          new_contact_item.addresses = [{street: address}];
+        }
+        if (phone !== "") {
+          new_contact_item.phones = [{number: phone}];
+        }
 
-      Meteor.call("add_contact", new_contact_item);
+        Meteor.call("add_contact", new_contact_item);
 
-      Session.set('address_filter', null);
-      Session.set('phone_filter', null);
-      new_contact.val("");
-      new_address.val("");
-      new_phone.val("");
+        Session.set('address_filter', null);
+        Session.set('phone_filter', null);
+        new_contact.val("");
+        new_address.val("");
+        new_phone.val("");
+      }
     },
     'click .contact_list_view': function() {
       Session.set('contacts_view_type', 'list');

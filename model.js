@@ -142,7 +142,6 @@ Contacts.allow({
             lists.push({_id:null});
 
             return(_.all(lists, function(element) {
-                      console.log(element);
                       if (element._id === null || element.owner === userId) { 
                         return true; 
                       } return false; 
