@@ -2,32 +2,54 @@
 // it is backed by a MongoDB collection named "contacts".
 Lists    = new Meteor.Collection("lists");
 Contacts = new Meteor.Collection("contacts");
+// client: declare collection to hold count object
+Counts   = new Meteor.Collection("counts");
 
-Lists.allow({
-  insert: function () {
-    return false;
-  },
-  update: function (userId, lists, fields, modifiers) {
-    return false;
-  },
-  remove: function (userId, lists) {
-    return false;
-  }
-});
 
-Contacts.allow({
-  insert: function () {
-    return false;
-  },
-  update: function (userId, contacts, fields, modifiers) {
-    return false;         
-  },
-  remove: function (userId, contacts) {
-    return false;
-  }
-});
+if (Meteor.isClient) {
 
-// On server startup, create some contacts if the database is empty.
+  Lists.allow({
+    insert: function () {
+      return false;
+    },
+    update: function (userId, lists, fields, modifiers) {
+      return false;
+    },
+    remove: function (userId, lists) {
+      return false;
+    }
+  });
+
+  Contacts.allow({
+    insert: function () {
+      return false;
+    },
+    update: function (userId, contacts, fields, modifiers) {
+      return false;         
+    },
+    remove: function (userId, contacts) {
+      return false;
+    }
+  });
+
+  Counts.allow({
+    insert: function () {
+      return true;
+    },
+    update: function () {
+      return true;
+    },
+    remove: function () {
+      return true;
+    }
+  });
+}
+
+
+
+
+
+
 //if (Meteor.isServer) {
 
   Meteor.methods({
@@ -161,7 +183,7 @@ Contacts.allow({
   });
 
 
-
+  // On server startup, create some contacts if the database is empty.
   Meteor.startup(function () {
     /*
       if (Lists.find().count() === 0) {
@@ -203,3 +225,5 @@ Contacts.allow({
     */
   });
 //}
+
+

@@ -22,6 +22,11 @@ Meteor.subscribe("contacts");
 
 
 Meteor.startup(function(){
+ // console.log("Current user #:", 
+ //             Counts.findOne().counts,
+ //             Counts.findOne().count, 
+ //             " counts,", 
+ //             Counts.find().fetch());
   /*
   all_user_contacts = Contacts.find({});
   console.log(all_user_contacts.fetch());
@@ -51,8 +56,9 @@ Meteor.autorun(function () {
   if (lists_filter) {
     Meteor.subscribe('contacts', lists_filter);
   }
-});
 
+  Meteor.subscribe("count_total_users", 2);
+});
 
 /*
   TODO: autorun to contacts changed by session's list 
@@ -66,6 +72,14 @@ Template.not_logged_in.logged_in = function () {
     return true;
   } 
   return false;
+}
+
+Template.footer.total_users = function () {
+  var total = 0;
+  if (Counts.findOne() !== undefined) {
+    total = parseInt(Counts.findOne().counts);
+  }
+  return "There are currently " + total + " registered users who are using Meteor Contacts";
 }
 
 
@@ -130,7 +144,7 @@ Template.contacts_view.contacts_view_type = function () {
 
 Template.contacts_view.events({
     'click #add_new_contact, keydown #new_contact_name, keydown #new_contact_address, keydown #new_contact_phone': function(evt) {
-      if (evt.which === undefined || evt.which === 13) {        
+      if (evt.which === 1 || evt.which === 13) {        
         var new_contact = $("#new_contact_name"), 
             name        = new_contact.val(),
             new_address = $("#new_contact_address"),
@@ -197,7 +211,7 @@ Template.contact_item.events({
       Meteor.call("remove_contact",this._id);
     },
     'click .add_another_address, blur .add_another_address_input, keydown .add_another_address_input': function(evt) {
-      if (evt.which === undefined || evt.which === 13) {
+      if (evt.which === undefined || evt.which === 1 || evt.which === 13) {
         var id = this._id,
             new_address = $("#" + this._id + '_add_address'),
             new_street  = new_address.val().trim();
@@ -217,7 +231,7 @@ Template.contact_item.events({
       Meteor.call("change_address",id,street,'remove');
     },
     'click .add_another_phone, blur .add_another_phone_input, keydown .add_another_phone_input': function (evt) {
-      if (evt.which === undefined || evt.which === 13) {
+      if (evt.which === undefined || evt.which === 1 || evt.which === 13) {
         var id = this._id,
             new_phone  = $("#" + this._id + '_add_phone'),
             new_number = new_phone.val().trim();

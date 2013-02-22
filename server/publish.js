@@ -26,3 +26,30 @@ function getLists(userId) {
   return Lists.find(owner);
 }
 
+
+Meteor.publish("count_total_users", function () {
+	var self  = this,
+		count = 0,
+		initializing = true;
+	
+	var handle = Meteor.users.find().observeChanges({
+		added: function (id) {
+			count++;
+			if (!initializing) {
+				self.changed("counts", 2, {counts: count});
+			}
+		},
+		removed: function (id) {
+			count--;
+			self.changed("counts", 2, {counts: count});
+		}
+	});
+
+	initializing = false;
+	self.added("counts", 2, {counts: count});
+	self.ready();
+
+	self.onStop(function() {
+		handle.stop();
+	});
+});
