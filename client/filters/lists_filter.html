@@ -1,0 +1,17 @@
+<template name="lists_filter">
+	
+	<h4>Add new List</h4>
+	<div class="input-control text">
+		<input type="text" placeholder="Add List" id="new_list_name" class="with-helper" />
+		<button class="helper helper-plus-2 add-list" tabindex="-1" type="button"></button>
+	</div>
+	
+	<hr>
+	<h4>Lists filter</h4>
+	{{#each lists}}
+		<div class="input-control text lists-filter">
+			<input type="text" value="{{list_name}}" class="with-helper {{selected}} list-input" />
+			<button class="helper remove-list" type="button"></button>
+		</div>
+	{{/each}}
+</template>

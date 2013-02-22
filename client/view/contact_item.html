@@ -1,0 +1,37 @@
+<template name="contact_item">
+	{{#unless contacts_view_type}}<div class="contact-div-full"><hr class="dashed"></div>{{/unless}}
+	<div class="bg-color-blueLight 
+				padding10 
+				{{#if contacts_view_type}}contact-div{{else}}contact-div-full{{/if}}">
+		<div class="input-control text">
+			<input type="text" value="{{name}}" class="with-helper contact-name" />
+			<button class="helper remove-contact" tabindex="-1" type="button"></button>
+		</div>	
+		Addresses
+		{{#each address_objs}}
+			<div class="input-control text">
+				<input type="text" value="{{street}}" class="contact-address" />
+				<button class="helper remove-address" type="button"></button>
+			</div>
+		{{/each}}	
+
+		<div class="input-control text">
+			<input type="text" id="{{_id}}_add_address" class="with-helper add_another_address_input" placeholder="Another Address">
+			<button class="helper helper-plus-2 add_another_address plus" type="button"></button>
+		</div>
+
+		Phones
+		{{#each phones_objs}}
+			<div class="input-control text">
+				<input type="text" value="{{number}}" class="contact-phone" />
+				<button class="helper remove-phone" type="button"></button>
+			</div>
+		{{/each}}
+
+		<div class="input-control text">
+			<input type="text" id="{{_id}}_add_phone" class="with-helper add_another_phone_input" placeholder="Another Phone">
+			<button class="helper helper-plus-2 add_another_phone plus" type="button"></button>
+		</div>
+
+	</div>
+</template>	

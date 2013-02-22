@@ -1,0 +1,52 @@
+<template name="header">
+
+	<div class="page">
+		<div class="nav-bar bg-color-blueLight">
+			<div class="nav-bar-inner padding10">
+				
+				<span class="pull-menu"></span>
+
+				<span class="element">
+		    		<a class="place-left" target="_blank" href="http://github.com/gogromat/meteor-contacts" id="name">
+						<i class="icon-book"></i>
+						Meteor Contacts
+					</a>
+				</span>
+
+		    	<div class="divider"></div>
+
+		    	<ul class="menu fg-color-darken">
+		    		<li>
+		    			<a href="/" class="fg-color-darken">
+		    				<i class="icon-home"></i>
+		    				<i class="iconic-question-mark"></i>
+		    				Home
+		    			</a>
+		    		</li>
+		    		<li data-role="dropdown">
+		    			<a href="#" class="fg-color-darken">
+		    				<i class="icon-info-2"></i>
+		    				About
+		    			</a>
+		    			<ul class="dropdown-menu">
+		    				<li>
+		    					<a href="contact" class="fg-color-darken">
+		    						<i class="icon-phone"></i>
+		    						Contact Us
+		    					</a>
+		    				</li>
+		    			</ul>
+		    		</li>
+		    	</ul>
+
+		    	<div id="login-div">
+		    		<i class="icon-user" id="login_icon"></i>
+		    		<span class="element fg-color-darken">
+		    			{{loginButtons align="right"}}
+		    		</span>
+		    	</div>
+
+			</div>
+    	</div>
+	</div>		
+</template>

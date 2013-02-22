@@ -1,0 +1,58 @@
+<template name="contacts_view">
+
+	<table summary="Main view of Contact Lists and contacts each list holds">
+		<colgroup>
+			<col class="list_td"/>
+			<col class="contact_td"/>
+			<col class="contact_list_control"/>
+		</colgroup>
+		<thead>
+			<tr>
+				<td>
+					<h3>Contact Lists</h3>
+				</td>
+				<td>
+					<h3>Contacts</h3>
+				</td>
+				<td>
+					<div class="toolbar">
+						<button class="contact_grid_view {{#if contacts_view_type}}bg-color-greenLight{{/if}}">
+							<i class="icon-grid"></i>
+						</button>
+						<button class="contact_list_view {{#unless contacts_view_type}}bg-color-greenLight{{/unless}}">
+							<i class="icon-list"></i>
+						</button>	
+					</div>
+				</td>
+			</tr>
+		</thead>
+		<tfoot></tfoot>
+		<tbody>
+			<tr class="main-table-row">
+				<td>
+					{{>lists_filter}}
+					<hr>
+					<h4>Search Contacts</h4>
+					{{>search_contacts}}
+					<hr>
+					<h4>Address filter</h4>
+					<div class="filter_div">
+						{{>address_filter}}
+					</div>
+					<hr>
+					<h4>Phone filter</h4>
+					<div class="filter_div">
+						{{>phone_filter}}
+					</div>
+				</td>
+				<td colspan="2">
+					{{>add_contact}}
+					
+					{{#each contacts}}
+			  			{{> contact_item}}
+					{{/each}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</template>

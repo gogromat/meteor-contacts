@@ -15,6 +15,11 @@
     background-color: rgba(0,0,0,0.60) !important;
 }
 
+hr.dashed {
+    width:  100%;
+    color:  #bababa;
+    border: dashed 1px #bababa;
+}
 
 .contact-div {
     border: 1px dashed #bababa;

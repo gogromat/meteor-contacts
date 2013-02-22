@@ -1,0 +1,17 @@
+<template name="phone_filter">
+	<div class="button-set padding10" data-role="button-set">
+		{{#each phones}}
+			<button class="shortcut phone-filter {{selected}} filter-botton">
+		        <!-- <span class="icon"></span> -->
+		        <span class="label">
+		        	{{#if number}}
+		            	{{number}}
+		            {{else}}
+		            	<i class="icon-phone"></i>All numbers
+		            {{/if}}
+		        </span>
+		        <span class="badge bg-color-maroonLight">{{count}}</span>
+		    </button>
+		{{/each}}
+	</div>	
+</template>	

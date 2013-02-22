@@ -1,0 +1,53 @@
+<template name="not_logged_in_sub_header">
+	{{#unless logged_in}}
+		<div class="page" style="text-align:center;">
+			<div class="carousel span12" style="height: 300px;width:100%;" 
+				 data-role="carousel" 
+				 data-param-effect="fade" 
+				 data-param-direction="left" 
+				 data-param-period="7000" 
+				 data-param-markers="off">
+	            <div class="slides">
+	                <div class="slide image" style="display: block; left: 0px; top: 0px;">
+	                    <div>
+	                    	<h3>
+	                    		With Meteor Contacts you can keep your contacts in one place,
+	                    		and access them on most modern browsers and devices.
+	                    	</h3>
+	                    	<div style="margin-left:auto;margin-right:auto;width:80%;">
+	                    		<img src="images/browser_logos.png" style="height:auto;">
+	                    	</div>
+	                    </div>
+	                    <div class="description lighter">
+	            			<h1 class="fg-color-white">
+								Welcome to Meteor Contacts!
+							</h1>
+	                    </div>
+	                </div>
+	                <div class="slide image" style="display: block; left: 0px; top: 0px;">
+	                	<div>
+	                		<h3>
+	                			You can sign-up to Meteor Contacts using Facebook, Google or Twitter!
+	                		</h3>
+	                		<h3>
+	                			Or you can create your private account using your email address. Simple.
+	                		</h3>
+	                		<h4>
+	                			* Meteor Contacts is secure and will never share your valuable information
+	                			with outside companies.
+	                		</h4>
+	                	</div>
+	                    <div class="description">
+	                   		<h2 class="fg-color-white">
+								Please sign-up / sign-in at the top to start using Meteor Contacts now
+							</h2>
+	                    </div>
+	                </div>
+	            </div>
+	            <span class="control left  fg-color-orange">‹</span>
+	            <span class="control right fg-color-orange">›</span>
+	        </div>
+
+		</div>
+	{{/unless}}
+</template>	
