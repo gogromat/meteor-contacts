@@ -20,17 +20,33 @@ Meteor.subscribe("users");
 Meteor.subscribe("contacts");
 //Meteor.subscribe("lists");
 
+
+Meteor.startup(function(){
+  /*
+  all_user_contacts = Contacts.find({});
+  console.log(all_user_contacts.fetch());
+  all_user_contacts.observeChanges({
+    added: function (id, contact) {
+      console.log("Added 1 contact", contact, id);
+    },
+    removed: function (id) {
+      console.log("Removed 1 contact", id);
+    }
+  });*/
+});
+
+
 // Subscribe to 'lists' collection on startup.
 // Select a list once data has arrived.
 Meteor.subscribe("lists", function() {
-  if (!Session.get("lists_filter")) {
-    var list = Lists.findOne({}, {sort : {name: 1}});
+  //if (!Session.get("lists_filter")) {
+    //var list = Lists.findOne({}, {sort : {name: 1}});
     //todo: Routes
-  }
+  //}
 });
 
 // Always be subscribed to the contacts for the selected list.
-Meteor.autosubscribe(function () {
+Meteor.autorun(function () {
   var lists_filter = Session.get('selected_list_id');
   if (lists_filter) {
     Meteor.subscribe('contacts', lists_filter);
@@ -43,12 +59,14 @@ Meteor.autosubscribe(function () {
   TODO: remove update from lists/contacts
  */
 
-  Template.not_logged_in.logged_in = function () {
-    if (Meteor.userId()) {
-      return true;
-    } 
-    return false;
-  }
+
+// Banner for users who are not logged in
+Template.not_logged_in.logged_in = function () {
+  if (Meteor.userId()) {
+    return true;
+  } 
+  return false;
+}
 
 
 Template.contacts_view.contacts = function () {
@@ -74,6 +92,8 @@ Template.contacts_view.contacts = function () {
     me.phones = {"number":phone_filter};
   }
 
+  var contacts;
+
   // SEARCH ALL FIELDS
   var search_contacts = Session.get('search_contacts');
   if (search_contacts) {
@@ -96,7 +116,7 @@ Template.contacts_view.contacts = function () {
           } 
         }, {sort: {name: 1}} );
   } else {
-    var contacts = Contacts.find(me, {sort: {name: 1}}); 
+    contacts = Contacts.find(me, {sort: {name: 1}}); 
   }
 
   return contacts;
@@ -174,76 +194,86 @@ Template.contact_item.events({
     'click .remove-contact': function() {
       Meteor.call("remove_contact",this._id);
     },
-    'click .add_another_address, blur .add_another_address_input': function() {
-      var id = this._id,
-          new_address = $("#" + this._id + '_add_address'),
-          new_street  = new_address.val().trim();
-      if (new_street === "") {
-        return false;
+    'click .add_another_address, blur .add_another_address_input, keydown .add_another_address_input': function(evt) {
+      if (evt.which === undefined || evt.which === 13) {
+        var id = this._id,
+            new_address = $("#" + this._id + '_add_address'),
+            new_street  = new_address.val().trim();
+        if (new_street === "") {
+          return false;
+        }
+        var isAddressSet = Contacts.findOne({_id: id, "addresses": {"street":new_street}});
+        if (!isAddressSet) {
+          Meteor.call("change_address",id,new_street,'add');
+        }
+        new_address.val("");
       }
-      var isAddressSet = Contacts.findOne({_id: id, "addresses": {"street":new_street}});
-      if (!isAddressSet) {
-        Meteor.call("change_address",id,new_street,'add');
-      }
-      new_address.val("");
     },
     'click .remove-address': function() {
       var id  = this.contact_id,
           street = this.street;
       Meteor.call("change_address",id,street,'remove');
     },
-    'click .add_another_phone, blur .add_another_phone_input': function () {
-      var id = this._id,
-          new_phone  = $("#" + this._id + '_add_phone'),
-          new_number = new_phone.val().trim();
-      if (new_number === "") {
-        return false;
+    'click .add_another_phone, blur .add_another_phone_input, keydown .add_another_phone_input': function (evt) {
+      if (evt.which === undefined || evt.which === 13) {
+        var id = this._id,
+            new_phone  = $("#" + this._id + '_add_phone'),
+            new_number = new_phone.val().trim();
+        if (new_number === "") {
+          return false;
+        }
+        var isPhoneSet = Contacts.findOne({_id: id, "phones": {"number":new_number}});
+        if (!isPhoneSet) {
+          Meteor.call("change_phone", id, new_number,'add');
+        }
+        new_phone.val("");
       }
-      var isPhoneSet = Contacts.findOne({_id: id, "phones": {"number":new_number}});
-      if (!isPhoneSet) {
-        Meteor.call("change_phone", id, new_number,'add');
-      }
-      new_phone.val("");
     },
     'click .remove-phone': function() {
       var id     = this.contact_id,
           number = this.number;
       Meteor.call("change_phone", id, number, 'remove');
     },
-    'blur .contact-name': function(evt) {
-      var id  = this._id,
-          old_name = this.name,
-          new_name = evt.target.value.trim();
-      if (old_name !== new_name) {
-        if (new_name !== "") {
-          Meteor.call("change_name",id,new_name,"change")
-        } else {
-          Meteor.call("remove_contact", id);
+    'blur .contact-name, keydown .contact-name': function(evt) {
+      if (evt.which === undefined || evt.which === 13) {
+        var id  = this._id,
+            old_name = this.name,
+            new_name = evt.target.value.trim();
+        if (old_name !== new_name) {
+          if (new_name !== "") {
+            Meteor.call("change_name",id,new_name,"change")
+          } else {
+            Meteor.call("remove_contact", id);
+          }
         }
       }
     },
-    'blur .contact-address': function(evt) {
-      var id = this.contact_id,
-          old_street = this.street,
-          new_street = evt.target.value.trim();
-      if (old_street !== new_street) {
-        Meteor.call("change_address",id, old_street, 'remove');
-        if (new_street !== "") {
-          Meteor.call("change_address",id, new_street, 'add');
+    'blur .contact-address, keydown .contact-address': function(evt) {
+      if (evt.which === undefined || evt.which === 13) {
+        var id = this.contact_id,
+            old_street = this.street,
+            new_street = evt.target.value.trim();
+        if (old_street !== new_street) {
+          Meteor.call("change_address",id, old_street, 'remove');
+          if (new_street !== "") {
+            Meteor.call("change_address",id, new_street, 'add');
+          }
+          Session.set('address_filter', null);
         }
-        Session.set('address_filter', null);
       }
     },
-    'blur .contact-phone': function(evt) {
-      var id = this.contact_id,
-          old_number = this.number,
-          new_number = evt.target.value.trim();
-      if (old_number !== new_number) {
-        Meteor.call("change_phone",id, old_number, 'remove');
-        if (new_number !== "") {
-          Meteor.call("change_phone",id, new_number, 'add');
+    'blur .contact-phone, keydown .contact-phone': function(evt) {
+      if (evt.which === undefined || evt.which === 13) {
+        var id = this.contact_id,
+            old_number = this.number,
+            new_number = evt.target.value.trim();
+        if (old_number !== new_number) {
+          Meteor.call("change_phone",id, old_number, 'remove');
+          if (new_number !== "") {
+            Meteor.call("change_phone",id, new_number, 'add');
+          }
+          Session.set('phone_filter', null);
         }
-        Session.set('phone_filter', null);
       }
     }
 });
@@ -424,21 +454,21 @@ Template.lists_filter.events({
     },50);
     Meteor.flush();
   },
-  'click .add-list, blur #new_list_name' : function() {
-    var new_list = $('#new_list_name'),
-        new_list_name = new_list.val().trim();
+  'click .add-list, blur #new_list_name, keydown #new_list_name' : function(evt) {
+    if (evt.which === undefined || evt.which === 13) {
+      var new_list = $('#new_list_name'),
+          new_list_name = new_list.val().trim();
 
-    console.log("blurring...", new_list_name);
-
-    if (new_list_name !== "") {
-      var new_list_id = 0;
-      Meteor.setTimeout(function () {
-        new_list_id = Meteor.call("add_list", new_list_name);
+      if (new_list_name !== "") {
+        var new_list_id = 0;
         Meteor.setTimeout(function () {
-          Session.set("selected_list_id", new_list_id);
+          new_list_id = Meteor.call("add_list", new_list_name);
+          Meteor.setTimeout(function () {
+            Session.set("selected_list_id", new_list_id);
+          }, 300);
         }, 300);
-      }, 300);
-      new_list.val("");
+        new_list.val("");
+      }
     }
   },
   'blur .list-selected' : function (evt) {

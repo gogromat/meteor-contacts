@@ -7,6 +7,7 @@ Meteor.publish("lists", function () {
 	return getLists(this.userId);
 });
 
+
 // todo: return only those contacts, 
 // whose list_ids belong to lists that belong to userId or public (everyone)
 Meteor.publish("contacts", function () {
@@ -24,3 +25,4 @@ function getLists(userId) {
   var owner = {owner: userId} || {owner: null};
   return Lists.find(owner);
 }
+

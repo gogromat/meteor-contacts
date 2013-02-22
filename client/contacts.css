@@ -11,6 +11,11 @@
 }
 
 
+.description.lighter {
+    background-color: rgba(0,0,0,0.60) !important;
+}
+
+
 .contact-div {
     border: 1px dashed #bababa;
     width:  49% !important;

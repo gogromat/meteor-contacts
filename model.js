@@ -27,9 +27,6 @@ Contacts.allow({
   }
 });
 
-
-
-
 // On server startup, create some contacts if the database is empty.
 //if (Meteor.isServer) {
 
