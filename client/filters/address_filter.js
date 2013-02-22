@@ -1,4 +1,10 @@
-    /* BY ADDRESS */
+/* FILTERS BY ADDRESS */
+Template.address_filter.helpers({
+  selected: function() {
+    return Session.equals("address_filter", this.street) ? 'bg-color-greenLight ' : '';
+  }
+});
+
 Template.address_filter.addresses = function() {
   var addresses = [];
   var contact_count = 0;
@@ -40,7 +46,3 @@ Template.address_filter.events({
     }
   }
 });
-
-Template.address_filter.selected = function() {
-  return Session.equals("address_filter", this.street) ? 'bg-color-greenLight ' : '';
-}

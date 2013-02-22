@@ -1,23 +1,23 @@
-// This is a transformation funciton that takes our
-// array of addresses for a person and returning a new object that 
-// containt an id of the contact in it as well for further manipulation
-Template.contact_item.address_objs = function () {
-  var contact_id = this._id;
-  return _.map(this.addresses || [], function (address) {
-    return {contact_id : contact_id, street : address.street};
-  });
-};
-
-Template.contact_item.phones_objs = function () {
-  var contact_id = this._id;
-  return _.map(this.phones || [], function (phone) {
-    return {contact_id : contact_id, number : phone.number};
-  });
-};
-
-Template.contact_item.contacts_view_type = function () {
-  return Session.get('contacts_view_type') === 'list' ? '' : 'contacts_view_type';
-};
+// This are the transformation functions that take our
+// array of addresses / phones for a person and returning a new object 
+// that containt an id of the contact in it as well for further manipulation
+Template.contact_item.helpers({
+  address_objs: function () {
+    var contact_id = this._id;
+    return _.map(this.addresses || [], function (address) {
+      return {contact_id : contact_id, street : address.street};
+    });
+  },
+  phones_objs: function () {
+    var contact_id = this._id;
+    return _.map(this.phones || [], function (phone) {
+      return {contact_id : contact_id, number : phone.number};
+    });
+  },
+  contacts_view_type: function () {
+    return Session.get('contacts_view_type') === 'list' ? '' : 'contacts_view_type';
+  }
+});
 
 
 Template.contact_item.events({

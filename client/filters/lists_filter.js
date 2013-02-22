@@ -1,4 +1,18 @@
-/* FILTER BY LISTS */
+/* FILTERS BY LISTS */
+Template.lists_filter.helpers({
+  list_name: function () {
+    return this.list_name || (!Meteor.userId() ? "Public Contacts" : "All My Contacts");
+  },
+  selected: function () {
+    var id = null;
+    if (this._id) {
+      id = this._id;
+    }
+    return Session.equals('selected_list_id', id) ? 'list-selected' : 'list-unselected';
+  }
+});
+
+
 Template.lists_filter.lists = function() {
   var lists = [];
 
@@ -10,19 +24,6 @@ Template.lists_filter.lists = function() {
   return lists;
   //todo: add count
 }
-
-Template.lists_filter.list_name = function () {
-  return this.list_name || (!Meteor.userId() ? "Public Contacts" : "All My Contacts");
-};
-
-Template.lists_filter.selected = function () {
-  var id = null;
-  if (this._id) {
-    id = this._id;
-  }
-  return Session.equals('selected_list_id', id) ? 'list-selected' : 'list-unselected';
-};
-
 
 Template.lists_filter.events({
   'mousedown .lists-filter' : function() {//evt, tmpl

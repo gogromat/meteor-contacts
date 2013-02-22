@@ -1,4 +1,11 @@
-  /* FILTER BY PHONES */
+/* FILTERS BY PHONES */
+Template.phone_filter.helpers({
+  selected: function() {
+    return Session.equals("phone_filter", this.number) ? 'bg-color-greenLight ' : '';
+  }
+});
+
+
 Template.phone_filter.phones = function() {
   var phones = [];
   var contact_count = 0;
@@ -40,7 +47,3 @@ Template.phone_filter.events({
     }
   }
 });
-
-Template.phone_filter.selected = function() {
-  return Session.equals("phone_filter", this.number) ? 'bg-color-greenLight ' : '';
-}

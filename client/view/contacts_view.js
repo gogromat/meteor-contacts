@@ -2,6 +2,12 @@
   TODO: autorun to contacts changed by session's list 
   TODO: remove update from lists/contacts
  */
+ 
+Template.contacts_view.helpers({
+  contacts_view_type: function () {
+    return Session.get('contacts_view_type') === 'grid' ? 'contacts_view_type' : '';
+  }
+});
 
 Template.contacts_view.contacts = function () {
 
@@ -55,12 +61,6 @@ Template.contacts_view.contacts = function () {
 
   return contacts;
 };
-
-
-Template.contacts_view.contacts_view_type = function () {
-  return Session.get('contacts_view_type') === 'grid' ? 'contacts_view_type' : '';
-};
-
 
 Template.contacts_view.events({
     'click #add_new_contact, keydown #new_contact_name, keydown #new_contact_address, keydown #new_contact_phone': function(evt) {
