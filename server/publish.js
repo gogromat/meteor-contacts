@@ -1,6 +1,6 @@
 //todo check later
 Meteor.publish("users", function () {
-  return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
+	return getUsers();
 });
 
 Meteor.publish("lists", function () {
@@ -26,13 +26,22 @@ function getLists(userId) {
   return Lists.find(owner);
 }
 
+function getUsers() {
+	return Meteor.users.find({}
+  						   //what fields are accessible by the client
+  						   //, profile: 0
+  						   ,{fields: {emails: 1}
+  						   }
+  						  );
+}
+
 
 Meteor.publish("count_total_users", function () {
 	var self  = this,
 		count = 0,
 		initializing = true;
 	
-	var handle = Meteor.users.find().observeChanges({
+	var handle = getUsers().observeChanges({
 		added: function (id) {
 			count++;
 			if (!initializing) {

@@ -10,7 +10,8 @@ Template.search_contacts.events({
       Session.set('search_contacts', value);
     }
   },
-  'click #delete-search-contacts' : function() {
+  'click #delete-search-contacts' : function(evt) {
+    evt.preventDefault();
     $('#search_contacts').val(" ");
     Session.set('search_contacts', null);
   }

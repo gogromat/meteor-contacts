@@ -33,5 +33,18 @@
 			<button class="helper helper-plus-2 add_another_phone plus" type="button"></button>
 		</div>
 
+		Emails
+		{{#each email_objs}}
+			<div class="input-control text">
+				<input type="text" value="{{address}}" class="contact-email" />
+				<button class="helper remove-email" type="button"></button>
+			</div>
+		{{/each}}
+
+		<div class="input-control text">
+			<input type="text" id="{{_id}}_add_email" class="with-helper add_another_email_input" placeholder="Another Email">
+			<button class="helper helper-plus-2 add_another_email plus" type="button"></button>
+		</div>
+
 	</div>
 </template>	

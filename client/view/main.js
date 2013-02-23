@@ -7,6 +7,9 @@ Session.set('address_filter', null);
 // Name of currently selected phone tag for filtering
 Session.set('phone_filter', null);
 
+// Name of currently selected email tag for filtering
+Session.set('email_filter', null);
+
 // Search by name, address, phone
 Session.set('search_contacts', null);
 

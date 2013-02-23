@@ -43,6 +43,17 @@ if (Meteor.isClient) {
       return true;
     }
   });
+
+
+  // fetch: []
+  // Optional performance enhancement. 
+  // Limits the fields that will be fetched from the database 
+  // for inspection by your update and remove functions.
+  Meteor.users.deny({
+    fetch: ['createdAt','services']
+  });
+
+
 }
 
 
@@ -126,6 +137,20 @@ if (Meteor.isClient) {
         }
       } else {
         throw new Meteor.Error(400, "Required parameters missing (id, number, action)");
+      }
+    },
+    change_email: function (id, address, action) {
+      console.log("Adding email")
+      if (id && address && action) {
+        if (action === 'add') {
+          Contacts.update(id, { $push : { emails: { address : address } } });
+        } else if (action === 'remove') {
+          Contacts.update(id, { $pull : { emails: { address : address } } });
+        } else {
+          throw new Meteor.Error(405, "Wrong Action");
+        }
+      } else {
+        throw new Meteor.Error(400, "Required parameters missing (id, address, action)");
       }
     },
     change_list_name: function(list_id, new_name) {

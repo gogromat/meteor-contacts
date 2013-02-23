@@ -4,6 +4,6 @@
     "metrouicss": {
       "git": "https://github.com/gogromat/meteor-metro-ui"
     },
-    "bootstrap-jasny": {}
+    "gravatar": {}
   }
 }

@@ -1,0 +1,16 @@
+<template name="email_filter">
+	<div class="button-set padding10" data-role="button-set">
+		{{#each emails}}
+			<button class="shortcut email-filter {{selected}} filter-botton">
+		        <span class="label">
+		        	{{#if address}}
+		            	{{address}}
+		            {{else}}
+		            	<i class="icon-home"></i>All emails
+		            {{/if}}
+		        </span>
+		        <span class="badge bg-color-maroonLight">{{count}}</span>
+		    </button>
+		{{/each}}
+	</div>
+</template>

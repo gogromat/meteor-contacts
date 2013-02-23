@@ -42,6 +42,7 @@ Template.lists_filter.events({
     Meteor.flush();
   },
   'click .add-list, blur #new_list_name, keydown #new_list_name' : function(evt) {
+    evt.preventDefault();
     if (evt.which === undefined || evt.which === 13) {
       var new_list = $('#new_list_name'),
           new_list_name = new_list.val().trim();

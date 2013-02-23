@@ -14,6 +14,12 @@ Template.contact_item.helpers({
       return {contact_id : contact_id, number : phone.number};
     });
   },
+  email_objs: function () {
+    var contact_id = this._id;
+    return _.map(this.emails || [], function (email) {
+      return {contact_id : contact_id, address: email.address};
+    });
+  },
   contacts_view_type: function () {
     return Session.get('contacts_view_type') === 'list' ? '' : 'contacts_view_type';
   }
@@ -64,6 +70,28 @@ Template.contact_item.events({
           number = this.number;
       Meteor.call("change_phone", id, number, 'remove');
     },
+    'click .add_another_email, blur .add_another_email_input, keydown .add_another_email_input': function (evt) {
+      if (evt.which === undefined || evt.which === 1 || evt.which === 13) {
+        var id          = this._id,
+            new_email   = $("#" + this._id + '_add_email'),
+            new_address = new_email.val().trim();
+        if (new_address === "") {
+          return false;
+        }
+        var isEmailSet = Contacts.findOne({_id: id, "emails": {"address": new_address }});
+        if (!isEmailSet) {
+          Meteor.call("change_email", id, new_address,'add');
+        }
+        new_email.val("");
+      }
+    },
+    'click .remove-email': function() {
+      var id      = this.contact_id,
+          address = this.address;
+      Meteor.call("change_email", id, address, 'remove');
+    },
+
+
     'blur .contact-name, keydown .contact-name': function(evt) {
       if (evt.which === undefined || evt.which === 13) {
         var id  = this._id,

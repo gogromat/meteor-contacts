@@ -2,7 +2,7 @@
   TODO: autorun to contacts changed by session's list 
   TODO: remove update from lists/contacts
  */
- 
+
 Template.contacts_view.helpers({
   contacts_view_type: function () {
     return Session.get('contacts_view_type') === 'grid' ? 'contacts_view_type' : '';
@@ -20,28 +20,36 @@ Template.contacts_view.contacts = function () {
     me.lists = {"list_id":list_id};
   }
 
-  // ADDRESS
-  var address_filter = Session.get('address_filter');
-  if (address_filter) {
-    me.addresses = {"street":address_filter};
-  }
 
+  // ADDRESS
+  // var address_filter = Session.get('address_filter');
+  // if (address_filter) {
+  //   me.addresses = {"street":address_filter};
+  // }
   // PHONES
-  var phone_filter = Session.get('phone_filter');
-  if (phone_filter) {
-    me.phones = {"number":phone_filter};
-  }
+  // var phone_filter = Session.get('phone_filter');
+  // if (phone_filter) {
+  //   me.phones = {"number":phone_filter};
+  // }
+  // EMAILS
+  // var email_filter = Session.get('email_filter');
+  // if (email_filter) {
+  //   me.emails = {"address":email_filter};
+  // }
+
+
 
   var contacts;
 
   // SEARCH ALL FIELDS
-  var search_contacts = Session.get('search_contacts');
-  if (search_contacts) {
+  if ( Session.get('search_contacts') ) {
+    // Search by text
     var pattern = new RegExp(search_contacts,"i"),
         contacts = Contacts.find({$where : 
           function() { 
             var street_equal = false,
-                number_equal = false;
+                number_equal = false,
+                email_equal  = false;
             _.each(this.addresses, function(address) {      
               if (pattern.test(address.street)) {
                 street_equal = true;
@@ -52,10 +60,19 @@ Template.contacts_view.contacts = function () {
                 number_equal = true;
               }
             });
-            return (pattern.test(this.name) || street_equal == true || number_equal == true);
+            _.each(this.emails, function(email) {      
+              if (pattern.test(email.address)) {
+                email_equal = true;
+              }
+            });
+            return (pattern.test(this.name) || street_equal === true || email_equal === true || number_equal === true);
           } 
         }, {sort: {name: 1}} );
   } else {
+    // Search by tags
+    me = setObjectInnerArray(me, "addresses", "street",  Session.get('address_filter'));
+    me = setObjectInnerArray(me, "phones",    "number",  Session.get('phone_filter'));
+    me = setObjectInnerArray(me, "emails",    "address", Session.get('email_filter'));
     contacts = Contacts.find(me, {sort: {name: 1}}); 
   }
 
