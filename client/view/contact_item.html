@@ -35,10 +35,14 @@
 
 		Emails
 		{{#each email_objs}}
-			<div class="input-control text">
-				<input type="text" value="{{address}}" class="contact-email" />
-				<button class="helper remove-email" type="button"></button>
+			<div >
+				<img src="{{gravatar}}" alt="gravatar" class="gravatar" style="float:left;"/>
+				<div class="input-control text" style="width:80% !important;float:right;">
+					<input type="text" value="{{address}}" class="contact-email" />
+					<button class="helper remove-email" type="button"></button>
+				</div>
 			</div>
+			<div class="clear"></div>
 		{{/each}}
 
 		<div class="input-control text">

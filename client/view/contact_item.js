@@ -17,7 +17,10 @@ Template.contact_item.helpers({
   email_objs: function () {
     var contact_id = this._id;
     return _.map(this.emails || [], function (email) {
-      return {contact_id : contact_id, address: email.address};
+      return {contact_id : contact_id, 
+              address: email.address,
+              gravatar: Gravatar.imageUrl(email.address)
+             };
     });
   },
   contacts_view_type: function () {
@@ -53,7 +56,7 @@ Template.contact_item.events({
     'click .add_another_phone, blur .add_another_phone_input, keydown .add_another_phone_input': function (evt) {
       if (evt.which === undefined || evt.which === 1 || evt.which === 13) {
         var id = this._id,
-            new_phone  = $("#" + this._id + '_add_phone'),
+            new_phone = $("#" + this._id + '_add_phone'),
             new_number = new_phone.val().trim();
         if (new_number === "") {
           return false;
@@ -72,8 +75,8 @@ Template.contact_item.events({
     },
     'click .add_another_email, blur .add_another_email_input, keydown .add_another_email_input': function (evt) {
       if (evt.which === undefined || evt.which === 1 || evt.which === 13) {
-        var id          = this._id,
-            new_email   = $("#" + this._id + '_add_email'),
+        var id = this._id,
+            new_email = $("#" + this._id + '_add_email'),
             new_address = new_email.val().trim();
         if (new_address === "") {
           return false;
@@ -90,7 +93,6 @@ Template.contact_item.events({
           address = this.address;
       Meteor.call("change_email", id, address, 'remove');
     },
-
 
     'blur .contact-name, keydown .contact-name': function(evt) {
       if (evt.which === undefined || evt.which === 13) {
@@ -129,6 +131,20 @@ Template.contact_item.events({
           Meteor.call("change_phone",id, old_number, 'remove');
           if (new_number !== "") {
             Meteor.call("change_phone",id, new_number, 'add');
+          }
+          Session.set('phone_filter', null);
+        }
+      }
+    },
+    'blur .contact-email, keydown .contact-email': function(evt) {
+      if (evt.which === undefined || evt.which === 13) {
+        var id = this.contact_id,
+            old_address = this.address,
+            new_address = evt.target.value.trim();
+        if (old_address !== new_address) {
+          Meteor.call("change_email",id, old_address, 'remove');
+          if (new_address !== "") {
+            Meteor.call("change_email",id, new_address, 'add');
           }
           Session.set('phone_filter', null);
         }

@@ -184,3 +184,10 @@ table, td, th {
     margin-right: 0 !important;
     width: 88%;
 }
+
+
+.gravatar {
+    height: 60px;
+    width:  60px;
+    margin: 3px;
+}

@@ -140,7 +140,6 @@ if (Meteor.isClient) {
       }
     },
     change_email: function (id, address, action) {
-      console.log("Adding email")
       if (id && address && action) {
         if (action === 'add') {
           Contacts.update(id, { $push : { emails: { address : address } } });
