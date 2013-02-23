@@ -20,25 +20,6 @@ Template.contacts_view.contacts = function () {
     me.lists = {"list_id":list_id};
   }
 
-
-  // ADDRESS
-  // var address_filter = Session.get('address_filter');
-  // if (address_filter) {
-  //   me.addresses = {"street":address_filter};
-  // }
-  // PHONES
-  // var phone_filter = Session.get('phone_filter');
-  // if (phone_filter) {
-  //   me.phones = {"number":phone_filter};
-  // }
-  // EMAILS
-  // var email_filter = Session.get('email_filter');
-  // if (email_filter) {
-  //   me.emails = {"address":email_filter};
-  // }
-
-
-
   var contacts;
 
   // SEARCH ALL FIELDS
@@ -79,8 +60,12 @@ Template.contacts_view.contacts = function () {
   return contacts;
 };
 
+//#new_contact_name #new_contact_address #new_contact_phone #new_contact_email 
 Template.contacts_view.events({
-    'click #add_new_contact, keydown #new_contact_name, keydown #new_contact_address, keydown #new_contact_phone': function(evt) {
+    'click #add_new_contact': function (evt) {
+      evt.preventDefault();
+    },
+    'click #add_new_contact, keydown .new-input': function(evt) {
       if (evt.which === 1 || evt.which === 13) {        
         var new_contact = $("#new_contact_name"), 
             name        = new_contact.val(),
@@ -88,28 +73,36 @@ Template.contacts_view.events({
             address     = new_address.val().trim(),
             new_phone   = $("#new_contact_phone"),
             phone       = new_phone.val().trim(),
+            new_email   = $("#new_contact_email"),
+            email       = new_email.val().trim(),
             new_contact_item = {};
 
         if (name === "") {
           return false;
-        } else {
-          new_contact_item.name = name;
-          new_contact_item.lists = [{list_id : Session.get('selected_list_id')}];
-        }
+        } 
+        
+        new_contact_item.name = name;
+        new_contact_item.lists = [{list_id : Session.get('selected_list_id')}];
+        
         if (address !== "") {
           new_contact_item.addresses = [{street: address}];
         }
         if (phone !== "") {
           new_contact_item.phones = [{number: phone}];
         }
+        if (email !== "") {
+          new_contact_item.emails = [{address: email}];
+        }
 
         Meteor.call("add_contact", new_contact_item);
 
         Session.set('address_filter', null);
         Session.set('phone_filter', null);
+        Session.set('emal_filter', null);
         new_contact.val("");
         new_address.val("");
         new_phone.val("");
+        new_email.val("");
       }
     },
     'click .contact_list_view': function() {

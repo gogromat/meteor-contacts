@@ -1,5 +1,6 @@
 <template name="add_contact">
 	<div class="contact-div-full bg-color-blueLight bottom-margin-10">
+		<form>
 		<div class="input-control text" id="new_contact">
 			<div class="icon-input-inline">
 				<i class="icon-user inline-icon"></i>
@@ -13,7 +14,15 @@
 				<i class="icon-phone inline-icon"></i>
 				<input type="text" id="new_contact_phone" placeholder="Phone" class="new-input"/>
 			</div>
-			<button id="add_new_contact" class="btn bg-color-greenLight small top-margin-9">Add Contact</button>
+			<div class="icon-input-inline">
+				<i class="icon-mail inline-icon"></i>
+				<input type="email" id="new_contact_email" 
+					   placeholder="Email" class="new-input"/>
+			</div>
+			<input class="btn bg-color-greenLight small top-margin-9" 
+				   id="add_new_contact" 
+				   type="submit" value="Add Contact"/>
 		</div>
+		</form>
 	</div>
 </template>
