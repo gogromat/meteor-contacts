@@ -9,7 +9,7 @@ Project allows users to add contacts to their own lists and
 view them from most of modern web browsers and devices.
 _(no support for IE lower than 9)_.
 
-You can check the _[Meteor Contacts website here](http://meteor-contacts.meteor.com/,"Meteor Contacts")_. 
+You can check the _[Meteor Contacts website here](http://meteor-contacts.meteor.com/)_. 
 
 ![Alt text](http://i47.tinypic.com/6ssv1u.png,"Meteor Contacts")
 
