@@ -4,14 +4,14 @@
 				padding10 
 				{{#if contacts_view_type}}contact-div{{else}}contact-div-full{{/if}}">
 		<div class="input-control text">
-			<input type="text" value="{{name}}" class="with-helper contact-name" />
-			<button class="helper remove-contact" tabindex="-1" type="button"></button>
+			<input type="text" value="{{name}}" class="with-helper contact_name" />
+			<button class="helper remove_contact" tabindex="-1" type="button"></button>
 		</div>	
 		Addresses
 		{{#each address_objs}}
 			<div class="input-control text">
-				<input type="text" value="{{street}}" class="contact-address" />
-				<button class="helper remove-address" type="button"></button>
+				<input type="text" value="{{street}}" class="contact_address" />
+				<button class="helper remove_address" type="button"></button>
 			</div>
 		{{/each}}	
 
@@ -23,8 +23,8 @@
 		Phones
 		{{#each phones_objs}}
 			<div class="input-control text">
-				<input type="text" value="{{number}}" class="contact-phone" />
-				<button class="helper remove-phone" type="button"></button>
+				<input type="text" value="{{number}}" class="contact_phone" />
+				<button class="helper remove_phone" type="button"></button>
 			</div>
 		{{/each}}
 
@@ -38,8 +38,8 @@
 			<div >
 				<img src="{{gravatar}}" alt="gravatar" class="gravatar" style="float:left;"/>
 				<div class="input-control text" style="width:80% !important;float:right;">
-					<input type="text" value="{{address}}" class="contact-email" />
-					<button class="helper remove-email" type="button"></button>
+					<input type="text" value="{{address}}" class="contact_email" />
+					<button class="helper remove_email" type="button"></button>
 				</div>
 			</div>
 			<div class="clear"></div>

@@ -23,8 +23,8 @@ Template.contacts_view.contacts = function () {
   var contacts;
 
   // SEARCH ALL FIELDS
-  if ( Session.get('search_contacts') ) {
-    // Search by text
+  var search_contacts = Session.get('search_contacts');
+  if (search_contacts) {
     var pattern = new RegExp(search_contacts,"i"),
         contacts = Contacts.find({$where : 
           function() { 
@@ -46,7 +46,7 @@ Template.contacts_view.contacts = function () {
                 email_equal = true;
               }
             });
-            return (pattern.test(this.name) || street_equal === true || email_equal === true || number_equal === true);
+            return (pattern.test(this.name) || street_equal === true || number_equal === true || email_equal === true);
           } 
         }, {sort: {name: 1}} );
   } else {
@@ -65,7 +65,7 @@ Template.contacts_view.events({
     'click #add_new_contact': function (evt) {
       evt.preventDefault();
     },
-    'click #add_new_contact, keydown .new-input': function(evt) {
+    'click #add_new_contact, keydown .new_input': function(evt) {
       if (evt.which === 1 || evt.which === 13) {        
         var new_contact = $("#new_contact_name"), 
             name        = new_contact.val(),

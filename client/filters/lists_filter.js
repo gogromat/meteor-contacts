@@ -8,7 +8,7 @@ Template.lists_filter.helpers({
     if (this._id) {
       id = this._id;
     }
-    return Session.equals('selected_list_id', id) ? 'list-selected' : 'list-unselected';
+    return Session.equals('selected_list_id', id) ? 'list_selected' : 'list_unselected';
   }
 });
 
@@ -26,7 +26,7 @@ Template.lists_filter.lists = function() {
 }
 
 Template.lists_filter.events({
-  'mousedown .lists-filter' : function() {//evt, tmpl
+  'mousedown .lists_filter' : function() {//evt, tmpl
     var id = null;
     if (this._id) {
       id = this._id;
@@ -41,25 +41,20 @@ Template.lists_filter.events({
     },50);
     Meteor.flush();
   },
-  'click .add-list, blur #new_list_name, keydown #new_list_name' : function(evt) {
-    evt.preventDefault();
+  'click .add_list, blur #new_list_name, keydown #new_list_name' : function(evt) {
     if (evt.which === undefined || evt.which === 13) {
       var new_list = $('#new_list_name'),
           new_list_name = new_list.val().trim();
 
       if (new_list_name !== "") {
-        var new_list_id = 0;
-        Meteor.setTimeout(function () {
-          new_list_id = Meteor.call("add_list", new_list_name);
-          Meteor.setTimeout(function () {
-            Session.set("selected_list_id", new_list_id);
-          }, 300);
-        }, 300);
+        Meteor.call("add_list", new_list_name, function (error, result) {
+          Session.set("selected_list_id", result);
+        });        
         new_list.val("");
       }
     }
   },
-  'blur .list-selected' : function (evt) {
+  'blur .list_selected' : function (evt) {
     var id = this._id,
         old_name = this.list_name,
         new_name = evt.target.value.trim();
@@ -67,7 +62,7 @@ Template.lists_filter.events({
         Meteor.call("change_list_name", id, new_name);
     }
   },
-  'click .remove-list' : function() {
+  'click .remove_list' : function() {
     var list_id = this._id;
     Contacts.find({"lists":{"list_id": list_id}}).forEach(function(contact) {
       if (_.size(contact.lists) > 1) {

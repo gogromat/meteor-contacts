@@ -38,7 +38,7 @@ Template.address_filter.addresses = function() {
 
 
 Template.address_filter.events({
-  'mousedown .address-filter': function() {
+  'mousedown .address_filter': function() {
     if (Session.equals('address_filter', this.street)) {
       Session.set('address_filter', null);
     } else {

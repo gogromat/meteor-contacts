@@ -38,7 +38,7 @@ Template.email_filter.emails = function() {
 
 
 Template.email_filter.events({
-  'mousedown .email-filter': function() {
+  'mousedown .email_filter': function() {
     if (Session.equals('email_filter', this.address)) {
       Session.set('email_filter', null);
     } else {

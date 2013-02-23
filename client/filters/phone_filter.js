@@ -39,7 +39,7 @@ Template.phone_filter.phones = function() {
 
 
 Template.phone_filter.events({
-  'mousedown .phone-filter': function() {
+  'mousedown .phone_filter': function() {
     if (Session.equals('phone_filter', this.number)) {
       Session.set('phone_filter', null);
     } else {

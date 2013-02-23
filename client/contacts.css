@@ -54,7 +54,7 @@ table, td, th {
     vertical-align: top;
 }
 
-.lists-filter {
+.lists_filter {
     cursor:hand;cursor: pointer;
     border-color: #66A3FF !important;
 
@@ -75,11 +75,11 @@ table, td, th {
     float:  right;
 }
 
-.list-selected {
+.list_selected {
     border: 1px solid blue !important;
 }
 
-.list-unselected {
+.list_unselected {
     cursor: hand;
     cursor: pointer;
 }
@@ -138,7 +138,7 @@ table, td, th {
         margin-bottom: 8px;
         display: block !important;
     }   
-    .new-input {
+    .new_input {
         width: 100% !important;
     }
     .inline-icon {
@@ -155,7 +155,7 @@ table, td, th {
         margin-bottom: 8px;
         display: block !important;
     }   
-    .new-input {
+    .new_input {
         width: 92% !important;
     }
     #new_contact {
@@ -180,7 +180,7 @@ table, td, th {
 .icon-input-inline {
     display: table-cell;
 }
-.new-input {
+.new_input {
     margin-right: 0 !important;
     width: 88%;
 }

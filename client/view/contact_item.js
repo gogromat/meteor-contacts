@@ -30,7 +30,7 @@ Template.contact_item.helpers({
 
 
 Template.contact_item.events({
-    'click .remove-contact': function() {
+    'click .remove_contact': function() {
       Meteor.call("remove_contact",this._id);
     },
     'click .add_another_address, blur .add_another_address_input, keydown .add_another_address_input': function(evt) {
@@ -48,7 +48,7 @@ Template.contact_item.events({
         new_address.val("");
       }
     },
-    'click .remove-address': function() {
+    'click .remove_address': function() {
       var id  = this.contact_id,
           street = this.street;
       Meteor.call("change_address",id,street,'remove');
@@ -68,7 +68,7 @@ Template.contact_item.events({
         new_phone.val("");
       }
     },
-    'click .remove-phone': function() {
+    'click .remove_phone': function() {
       var id     = this.contact_id,
           number = this.number;
       Meteor.call("change_phone", id, number, 'remove');
@@ -88,13 +88,13 @@ Template.contact_item.events({
         new_email.val("");
       }
     },
-    'click .remove-email': function() {
+    'click .remove_email': function() {
       var id      = this.contact_id,
           address = this.address;
       Meteor.call("change_email", id, address, 'remove');
     },
 
-    'blur .contact-name, keydown .contact-name': function(evt) {
+    'blur .contact_name, keydown .contact_name': function(evt) {
       if (evt.which === undefined || evt.which === 13) {
         var id  = this._id,
             old_name = this.name,
@@ -108,45 +108,60 @@ Template.contact_item.events({
         }
       }
     },
-    'blur .contact-address, keydown .contact-address': function(evt) {
+    'blur .contact_address, keydown .contact_address': function(evt) {
       if (evt.which === undefined || evt.which === 13) {
         var id = this.contact_id,
             old_street = this.street,
             new_street = evt.target.value.trim();
         if (old_street !== new_street) {
-          Meteor.call("change_address",id, old_street, 'remove');
-          if (new_street !== "") {
-            Meteor.call("change_address",id, new_street, 'add');
+          var isAddressSet = Contacts.findOne({_id: id, "addresses": {"street":new_street}});
+          if (!isAddressSet) {
+            Meteor.call("change_address",id, old_street, 'remove');
+            if (new_street !== "") {
+              Meteor.call("change_address",id, new_street, 'add');
+            }
+            Session.set('address_filter', null);
+          } else {
+            evt.target.value = old_street;
           }
-          Session.set('address_filter', null);
         }
       }
     },
-    'blur .contact-phone, keydown .contact-phone': function(evt) {
+    'blur .contact_phone, keydown .contact_phone': function(evt) {
       if (evt.which === undefined || evt.which === 13) {
         var id = this.contact_id,
             old_number = this.number,
             new_number = evt.target.value.trim();
         if (old_number !== new_number) {
-          Meteor.call("change_phone",id, old_number, 'remove');
-          if (new_number !== "") {
-            Meteor.call("change_phone",id, new_number, 'add');
+          var isPhoneSet = Contacts.findOne({_id: id, "phones": {"number":new_number}});
+          if (!isPhoneSet) {          
+            Meteor.call("change_phone",id, old_number, 'remove');
+            if (new_number !== "") {
+              Meteor.call("change_phone",id, new_number, 'add');
+            }
+            Session.set('phone_filter', null);
+          } else {
+            evt.target.value = old_number;
           }
-          Session.set('phone_filter', null);
         }
       }
     },
-    'blur .contact-email, keydown .contact-email': function(evt) {
+    'blur .contact_email, keydown .contact_email': function(evt) {
       if (evt.which === undefined || evt.which === 13) {
         var id = this.contact_id,
             old_address = this.address,
             new_address = evt.target.value.trim();
         if (old_address !== new_address) {
-          Meteor.call("change_email",id, old_address, 'remove');
-          if (new_address !== "") {
-            Meteor.call("change_email",id, new_address, 'add');
-          }
-          Session.set('phone_filter', null);
+          var isEmailSet = Contacts.findOne({_id: id, "emails": {"address": new_address }});
+          if (!isEmailSet) {
+            Meteor.call("change_email",id, old_address, 'remove');
+            if (new_address !== "") {
+              Meteor.call("change_email",id, new_address, 'add');
+            }
+            Session.set('phone_filter', null);
+          } else {
+            evt.target.value = old_address;
+          }          
         }
       }
     }
