@@ -2,13 +2,10 @@
   "packages": {
     "router": {},
     "metrouicss": {
-      "git": "https://github.com/gogromat/meteor-metro-ui"
+      "path": "/home/gogromat/Projects/meteor/metroui"
     },
     "gravatar": {
 
-    },
-    "meteor-jquery-tooltip": {
-      "git": "https://github.com/gogromat/meteor-jquery-tooltip"
     }
   }
 }

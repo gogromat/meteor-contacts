@@ -1,7 +1,7 @@
 /* FILTERS BY ADDRESS */
 Template.address_filter.helpers({
   selected: function() {
-    return Session.equals("address_filter", this.street) ? 'bg-color-greenLight ' : '';
+    return Session.equals("address_filter", this.street) ? 'bg-color-greenLight ' : 'bg-color-gray';
   }
 });
 

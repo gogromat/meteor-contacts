@@ -8,14 +8,9 @@
     "basePackages": {
       "router": {},
       "metrouicss": {
-        "git": "https://github.com/gogromat/meteor-metro-ui",
-        "branch": "master"
+        "path": "../metroui"
       },
-      "gravatar": {},
-      "meteor-jquery-tooltip": {
-        "git": "https://github.com/gogromat/meteor-jquery-tooltip",
-        "branch": "master"
-      }
+      "gravatar": {}
     },
     "packages": {
       "router": {
@@ -24,19 +19,12 @@
         "commit": "0691a6e2c4c249ce7d00cd6dc7ad27e1c7330a31"
       },
       "metrouicss": {
-        "git": "https://github.com/gogromat/meteor-metro-ui",
-        "branch": "master",
-        "commit": "432860979a5872605777be7c874356fa930ea860"
+        "path": "../metroui"
       },
       "gravatar": {
         "git": "https://github.com/tmeasday/meteor-gravatar.git",
         "tag": "v0.0.3",
         "commit": "557d1a7bff98d285cb023b0f44541a66bf0c7b4c"
-      },
-      "meteor-jquery-tooltip": {
-        "git": "https://github.com/gogromat/meteor-jquery-tooltip",
-        "branch": "master",
-        "commit": "d2ab4f1967bc74154b35972b5fd85374b86cd96b"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

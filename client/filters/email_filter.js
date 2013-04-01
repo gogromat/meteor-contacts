@@ -1,7 +1,7 @@
 /* FILTERS BY ADDRESS */
 Template.email_filter.helpers({
   selected: function() {
-    return Session.equals("email_filter", this.address) ? 'bg-color-greenLight ' : '';
+    return Session.equals("email_filter", this.address) ? 'bg-color-greenLight ' : 'bg-color-gray';
   }
 });
 

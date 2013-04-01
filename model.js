@@ -203,6 +203,7 @@ if (Meteor.isClient) {
 
   // On server startup, create some contacts if the database is empty.
   Meteor.startup(function () {
+    
     /*
       if (Lists.find().count() === 0) {
         console.log("Trying to insert new Lists");

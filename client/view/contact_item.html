@@ -1,11 +1,16 @@
 <template name="contact_item">
-	{{#unless contacts_view_type}}<div class="contact-div-full"><hr class="dashed"></div>{{/unless}}
+	{{#unless contacts_view_type}}
+		<div class="contact-div-full">
+			<hr class="dashed">
+		</div>
+	{{/unless}}
+
 	<div class="bg-color-blueLight 
 				padding10 
 				{{#if contacts_view_type}}contact-div{{else}}contact-div-full{{/if}}">
 		<div class="input-control text">
-			<input type="text" value="{{name}}" class="with-helper contact_name" />
-			<button class="helper remove_contact" tabindex="-1" type="button"></button>
+			<input type="text" value="{{name}}" class="contact_name" />
+			<button class="btn-clear remove_contact" tabindex="-1" type="button"></button>
 		</div>	
 		Addresses
 		{{#each address_objs}}

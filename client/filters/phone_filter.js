@@ -1,7 +1,7 @@
 /* FILTERS BY PHONES */
 Template.phone_filter.helpers({
   selected: function() {
-    return Session.equals("phone_filter", this.number) ? 'bg-color-greenLight ' : '';
+    return Session.equals("phone_filter", this.number) ? 'bg-color-greenLight ' : 'bg-color-gray';
   }
 });
 

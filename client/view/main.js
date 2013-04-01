@@ -32,3 +32,7 @@ Meteor.autorun(function () {
 
   Meteor.subscribe("count_total_users", 2);
 });
+
+$(document).ready(function(){
+	$("body").addClass("metrouicss");
+});
