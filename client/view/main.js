@@ -35,4 +35,5 @@ Meteor.autorun(function () {
 
 $(document).ready(function(){
 	$("body").addClass("metrouicss");
+	$("#list_filter_suggestion").hide();
 });

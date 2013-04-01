@@ -139,11 +139,17 @@ table, td, th {
     background-color: #F3F3F3 !important;
 }
 
+
+/* Add new contact divs */
+.icon-input-inline {
+    display: table-cell !important;
+}
+
 /* MEDIA QUERIES (INCREASING) */
 @media all and (max-width: 420px) {
     .icon-input-inline {
-        margin-top:    8px;
-        margin-bottom: 8px;
+        margin-top:    8px !important;
+        margin-bottom: 8px !important;
         display: block !important;
     }   
     .new_input {
@@ -165,8 +171,8 @@ table, td, th {
 }
 @media all and (max-width: 900px) {
     .icon-input-inline {
-        margin-top:    8px;
-        margin-bottom: 8px;
+        margin-top:    8px !important;
+        margin-bottom: 8px !important;
         display: block !important;
     }   
     .new_input {
@@ -180,8 +186,8 @@ table, td, th {
 
 @media all and (max-width: 980px) {
     .icon-input-inline {
-        margin-top:    8px;
-        margin-bottom: 8px;
+        margin-top:    8px !important;
+        margin-bottom: 8px !important;
         display: block !important;
     }
     .gravatar {
@@ -196,9 +202,6 @@ table, td, th {
     width:   100%  !important;
 }
 
-.icon-input-inline {
-    display: table-cell;
-}
 .new_input {
     margin-right: 0 !important;
     width: 88%;
@@ -211,8 +214,8 @@ table, td, th {
     margin: 3px;
 }
 
+
 .replies {
-    display: none;
     position: absolute !important;
     z-index: 10000;
 }
