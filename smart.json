@@ -4,6 +4,11 @@
     "metrouicss": {
       "git": "https://github.com/gogromat/meteor-metro-ui"
     },
-    "gravatar": {}
+    "gravatar": {
+
+    },
+    "meteor-jquery-tooltip": {
+      "git": "https://github.com/gogromat/meteor-jquery-tooltip"
+    }
   }
 }

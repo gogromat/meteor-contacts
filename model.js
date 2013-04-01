@@ -48,17 +48,13 @@ if (Meteor.isClient) {
   // fetch: []
   // Optional performance enhancement. 
   // Limits the fields that will be fetched from the database 
-  // for inspection by your update and remove functions.
+  // for inspection by update and remove functions.
   Meteor.users.deny({
-    fetch: ['createdAt','services']
+    fetch: ['createdAt', 'services']
   });
 
 
 }
-
-
-
-
 
 
 //if (Meteor.isServer) {
@@ -67,19 +63,17 @@ if (Meteor.isClient) {
     add_list: function (name) {
       var userId = this.userId;
 
-      if (!name) {
-        throw new Meteor.Error(400, "Name parameter is missing");
-      } else if (!userId) {
-        throw new Meteor.Error(403, "You must be logged in");
+      if (name && userId) {
+        inserted =  Lists.insert({
+          owner: userId,
+          list_name: name 
+        }); 
+
+        user_lists = Lists.find({owner: userId}).fetch();
+
+        return inserted;
       }
-      inserted =  Lists.insert({
-        owner: userId,
-        list_name: name 
-      }); 
-
-      user_lists = Lists.find({owner: userId}).fetch();
-
-      return inserted;
+      return false;
     },
     add_contact: function (contact_item) {
       var userId = this.userId;

@@ -148,6 +148,12 @@ table, td, th {
         display: block !important;
         width:   100%  !important;
     }
+    .gravatar {
+        height: 40px !important;
+        width:  40px !important;
+        margin: 0px;
+    }
+
 }
 @media all and (max-width: 900px) {
     .icon-input-inline {
@@ -170,6 +176,11 @@ table, td, th {
         margin-bottom: 8px;
         display: block !important;
     }
+    .gravatar {
+        height: 60px !important;
+        width:  60px !important;
+        margin: 3px;
+    }
 }
 
 #new_contact {
@@ -187,7 +198,13 @@ table, td, th {
 
 
 .gravatar {
-    height: 60px;
-    width:  60px;
+    height: 80px !important;
+    width:  80px !important;
     margin: 3px;
+}
+
+.replies {
+    display: none;
+    position: absolute !important;
+    z-index: 10000;
 }

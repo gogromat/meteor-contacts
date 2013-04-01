@@ -2,7 +2,8 @@
 	
 	<h4>Add new List</h4>
 	<div class="input-control text">
-		<input type="text" placeholder="Add List" id="new_list_name" class="with-helper" />
+		<input type="text" placeholder="Add List" 
+			   id="new_list_name" class="with-helper" />
 		<button class="helper helper-plus-2 add_list" tabindex="-1" type="button"></button>
 	</div>
 	
@@ -14,4 +15,16 @@
 			<button class="helper remove_list" type="button"></button>
 		</div>
 	{{/each}}
+
+	<ul class="replies" id="list_filter_suggestion">
+        <li class="bg-color-greenLight">
+            <b class="sticker sticker-left sticker-color-greenLight"></b>
+            <div class="tertiary-secondary-text">
+            	Please <strong>sign-up / sign-in </strong> before editing lists
+            	<br>
+            	<em>(though you can edit public contacts for now)</em>
+            </div>
+        </li>
+    </ul>
+
 </template>

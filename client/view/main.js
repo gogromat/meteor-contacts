@@ -21,37 +21,7 @@ Session.set('contacts_view_type', 'grid');
 
 Meteor.subscribe("users");
 Meteor.subscribe("contacts");
-//Meteor.subscribe("lists");
-
-
-Meteor.startup(function(){
- // console.log("Current user #:", 
- //             Counts.findOne().counts,
- //             Counts.findOne().count, 
- //             " counts,", 
- //             Counts.find().fetch());
-  /*
-  all_user_contacts = Contacts.find({});
-  console.log(all_user_contacts.fetch());
-  all_user_contacts.observeChanges({
-    added: function (id, contact) {
-      console.log("Added 1 contact", contact, id);
-    },
-    removed: function (id) {
-      console.log("Removed 1 contact", id);
-    }
-  });*/
-});
-
-
-// Subscribe to 'lists' collection on startup.
-// Select a list once data has arrived.
-Meteor.subscribe("lists", function() {
-  //if (!Session.get("lists_filter")) {
-    //var list = Lists.findOne({}, {sort : {name: 1}});
-    //todo: Routes
-  //}
-});
+Meteor.subscribe("lists", function() {});
 
 // Always be subscribed to the contacts for the selected list.
 Meteor.autorun(function () {

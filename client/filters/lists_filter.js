@@ -41,6 +41,26 @@ Template.lists_filter.events({
     },50);
     Meteor.flush();
   },
+  'mouseover .lists_filter, mouseover #new_list_name' : function (e) {
+    if (!Meteor.user()) {
+      var div_filter  = $(e.currentTarget),
+          div_position = div_filter.offset(),
+          top     = div_position.top,
+          left    = div_position.left,
+          width   = div_filter.width(),
+          xOffset = 20;
+
+      $("#list_filter_suggestion")
+        .css("top", (top) + "px")
+        .css("left",(left + width + xOffset) + "px")
+        .show(100);
+    }
+  },
+  'mouseout .lists_filter, mouseout #new_list_name': function () {
+    if (!Meteor.user()) {
+      $("#list_filter_suggestion").hide(250);
+    }
+  },
   'click .add_list, blur #new_list_name, keydown #new_list_name' : function(evt) {
     if (evt.which === undefined || evt.which === 13) {
       var new_list = $('#new_list_name'),
